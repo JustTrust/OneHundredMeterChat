@@ -19,4 +19,5 @@ public interface Constant {
     int TEN_SECONDS = 10000;
     int TWENTY_SECONDS = 20000;
     int FIVE_SECONDS = 5000;
+    int ONE_MINUTE = 60000;
 }
