@@ -3,33 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/map_container">
 
     <fragment
-        android:id="@+id/map"
-        class="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/gmap"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        class="com.google.android.gms.maps.SupportMapFragment"
+         />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="@dimen/map_bt_padding"
-        android:background="@color/black_overlay">
+        android:background="@color/black_overlay"
+        android:weightSum="10">
 
         <EditText
             android:id="@+id/map_text"
-            android:layout_width="330dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="9dp" />
+            android:layout_gravity="center_vertical"
+            android:layout_weight="8"/>
 
         <ImageView
             android:id="@+id/map_icon"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@mipmap/ic_map_icon" />
+            android:src="@mipmap/ic_map_icon"
+            android:layout_weight="2"/>
 
     </LinearLayout>
 

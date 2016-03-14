@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -18,10 +19,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
  *
  */
 public class MapFragment extends Fragment implements Constant, OnMapReadyCallback {
+
     protected static String name = "Map";
     private static MapFragment ourInstance = new MapFragment();
-    String massage;
-    GoogleMap map;
+    private GoogleMap map;
+    private SupportMapFragment supportMapFragment;
 
     public MapFragment() {
     }
@@ -34,8 +36,16 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        if (supportMapFragment == null) {
+            supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
+        }
+        if (supportMapFragment != null) {
+            supportMapFragment.getMapAsync(this);
+        }
         return view;
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -51,7 +61,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
             return;
         }
         map.clear();
-        LatLng lastPosition = new LatLng(0,0);
+        LatLng lastPosition = new LatLng(0, 0);
         for (Message message : ListFragment.getInstance().messagesList) {
             Marker marker = map.addMarker(new MarkerOptions()
                     .position(message.latLng)

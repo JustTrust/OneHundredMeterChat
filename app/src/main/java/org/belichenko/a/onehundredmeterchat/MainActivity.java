@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        mViewPager.setCurrentItem(1);
     }
 
 
@@ -124,14 +124,19 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
 
             switch (position) {
                 case 0:
-                    return MapFragment.getInstance();
-                case 1:
                     return ListFragment.getInstance();
+                case 1:
+                    return MapFragment.getInstance();
                 case 2:
                     return SettingFragment.getInstance();
             }
             return null;
 
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override
