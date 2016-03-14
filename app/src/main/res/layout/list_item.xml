@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/id"
+        android:id="@+id/user_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:layout_margin="@dimen/view_marging"
+        tools:text="Vasiliy"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/coordinates_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        android:layout_margin="@dimen/view_marging"
+        tools:text="40.2658-36.23589"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:layout_toRightOf="@+id/user_list" />
+
+    <TextView
+        android:id="@+id/message_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/view_marging"
+        tools:text="One more stupid message"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:layout_below="@+id/user_list" />
+
+</RelativeLayout>

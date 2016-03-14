@@ -9,8 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.belichenko.a.onehundredmeterchat.dummy.DummyContent;
-import org.belichenko.a.onehundredmeterchat.dummy.DummyContent.DummyItem;
+import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -23,6 +22,8 @@ public class ListFragment extends Fragment implements Constant {
     private static ListFragment ourInstance = new ListFragment();
     private OnListFragmentInteractionListener mListener;
     protected static String name = "Chat";
+    protected ArrayList<Message> messagesList;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -47,13 +48,13 @@ public class ListFragment extends Fragment implements Constant {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-
+        messagesList = new ArrayList<>();
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new RecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new RecyclerViewAdapter(messagesList, mListener));
         }
         return view;
     }
@@ -87,7 +88,6 @@ public class ListFragment extends Fragment implements Constant {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Message message);
     }
 }
