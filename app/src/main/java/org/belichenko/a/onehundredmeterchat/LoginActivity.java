@@ -1,19 +1,24 @@
 package org.belichenko.a.onehundredmeterchat;
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements Constant {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -32,7 +37,14 @@ public class LoginActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    private View mContentView;
+    private boolean mVisible;
+
+
+    View mContentView;
+    View mControlsView;
+    EditText mStartBt;
+    EditText mName;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -50,8 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private EditText mStartBt;
-    private View mControlsView;
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -63,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
-    private boolean mVisible;
+
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
@@ -90,31 +101,57 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
-
         mVisible = true;
-        mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.cover_layout);
+        mControlsView = findViewById(R.id.fullscreen_content_controls);
         mStartBt = (EditText) findViewById(R.id.start_bt);
+        mName = (EditText) findViewById(R.id.editName);
+
+        // start service
+        Intent serviceIntent = new Intent(this, MsgService.class);
+        startService(serviceIntent);
+
+        SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+        String storedName = sharedPref.getString(STORED_NAME, "");
+
+        if (!storedName.isEmpty()) {
+            // start main activity if we have name
+            Intent activityIntent = new Intent(this, MainActivity.class);
+            startActivity(activityIntent);
+            this.finish();
+        }
+
         mStartBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mName.getText().toString().length() < 6) {
+                    Toast.makeText(App.getAppContext(),
+                            getString(R.string.no_valid_name), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                SharedPreferences.Editor edit =
+                        getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE)
+                        .edit();
+                edit.putString(STORED_NAME, mName.getText().toString());
+                edit.apply();
+
+                Intent activityIntent = new Intent(App.getAppContext(), MainActivity.class);
+                startActivity(activityIntent);
 
             }
         });
-        // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 toggle();
             }
         });
-
     }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.

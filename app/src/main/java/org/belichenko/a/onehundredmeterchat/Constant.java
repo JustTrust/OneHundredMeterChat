@@ -10,8 +10,7 @@ public interface Constant {
     String STORED_RADIUS = PACKAGE_NAME + ".storedRadius";
     String RADIUS = PACKAGE_NAME + ".radius";
 
-    String STORED_ACCURACY = PACKAGE_NAME + ".storedAccuracy";
-    String ACCURACY = PACKAGE_NAME + ".accuracy";
+    String STORED_NAME = PACKAGE_NAME + ".storedName";
 
     String STORED_UPDATE_TIME = PACKAGE_NAME + ".storedTime";
     String UPDATE_TIME = PACKAGE_NAME + ".updateTime";
