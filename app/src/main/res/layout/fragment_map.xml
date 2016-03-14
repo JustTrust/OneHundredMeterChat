@@ -27,11 +27,36 @@
         android:src="@mipmap/ic_map_icon" />
 
     <ImageView
+        android:id="@+id/map_sputnic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:padding="6dp"
         android:src="@mipmap/ic_sputnic" />
+
+    <ImageView
+        android:id="@+id/map_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/map_sputnic"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:padding="6dp"
+        android:src="@mipmap/ic_map" />
+
+    <ImageView
+        android:id="@+id/map_earth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/map_map"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:padding="6dp"
+        android:src="@mipmap/ic_earth" />
 
 
 </RelativeLayout>
