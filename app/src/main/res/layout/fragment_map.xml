@@ -24,7 +24,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
         android:layout_marginTop="18dp"
-        android:src="@mipmap/ic_mapIcon" />
+        android:padding="5dp"
+        android:src="@mipmap/ic_map_icon" />
 
     <ImageView
         android:id="@+id/map_sputnic"
