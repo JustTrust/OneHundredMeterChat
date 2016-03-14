@@ -17,8 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import org.belichenko.a.onehundredmeterchat.dummy.DummyContent;
+
+public class MainActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -85,6 +88,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Toast.makeText(this, "Item selected", Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -132,9 +140,17 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+
+            switch (position) {
+                case 0:
+                    return MapFragment.getInstance();
+                case 1:
+                    return ListFragment.getInstance();
+                case 2:
+                    return SettingFragment.getInstance();
+            }
+            return null;
+
         }
 
         @Override
@@ -147,11 +163,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return MapFragment.name;
                 case 1:
-                    return "SECTION 2";
+                    return ListFragment.name;
                 case 2:
-                    return "SECTION 3";
+                    return SettingFragment.name;
             }
             return null;
         }

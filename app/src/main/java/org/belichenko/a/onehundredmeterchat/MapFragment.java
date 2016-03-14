@@ -11,7 +11,9 @@ import android.view.ViewGroup;
  *
  */
 public class MapFragment extends Fragment implements Constant{
+
     private static MapFragment ourInstance = new MapFragment();
+    protected static String name = "Map";
 
     public static MapFragment getInstance() {
         return ourInstance;

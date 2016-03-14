@@ -19,8 +19,10 @@ import org.belichenko.a.onehundredmeterchat.dummy.DummyContent.DummyItem;
  * interface.
  */
 public class ListFragment extends Fragment implements Constant {
+
     private static ListFragment ourInstance = new ListFragment();
     private OnListFragmentInteractionListener mListener;
+    protected static String name = "Chat";
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).

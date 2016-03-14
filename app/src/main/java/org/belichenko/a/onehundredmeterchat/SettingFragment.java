@@ -11,7 +11,9 @@ import android.view.ViewGroup;
  *
  */
 public class SettingFragment extends Fragment implements Constant{
+
     private static SettingFragment ourInstance = new SettingFragment();
+    protected static String name = "Setting";
 
     public static SettingFragment getInstance() {
         return ourInstance;
