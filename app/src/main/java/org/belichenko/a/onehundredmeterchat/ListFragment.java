@@ -23,7 +23,6 @@ public class ListFragment extends Fragment implements Constant {
 
     protected static String name = "Chat";
     private static ListFragment ourInstance = new ListFragment();
-    final LatLng KHARKOV = new LatLng(49.9944422, 36.2368201);
     protected ArrayList<Message> messagesList;
     private OnListFragmentInteractionListener mListener;
 
@@ -49,6 +48,14 @@ public class ListFragment extends Fragment implements Constant {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         messagesList = new ArrayList<>();
+        // TODO: 14.03.2016 remove when we get server
+        Message msg = new Message();
+        msg.id = "1";
+        msg.userName = "Vasiliy";
+        msg.content = "One more stupid message";
+        msg.latLng = new LatLng(49.9944422, 36.2368201);
+        messagesList.add(msg);
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();

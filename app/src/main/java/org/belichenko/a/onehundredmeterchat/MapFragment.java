@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -20,6 +21,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
     protected static String name = "Map";
     private static MapFragment ourInstance = new MapFragment();
     String massage;
+    GoogleMap map;
 
     public MapFragment() {
     }
@@ -27,7 +29,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
     public static MapFragment getInstance() {
         return ourInstance;
     }
-    
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,17 +39,26 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
-
+        map = googleMap;
+        updateMessage();
     }
 
-    public void updateMessege(GoogleMap map) {
-        for (int i = 0; i < ListFragment.getInstance().messagesList.size(); i++) {
-            massage = String.valueOf(ListFragment.getInstance().messagesList.get(i));
-            Marker marker = map.addMarker(new MarkerOptions().position(ListFragment.getInstance().KHARKOV).title(massage));
+    public void updateMessage() {
+        if (map == null) {
+            return;
         }
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ListFragment.getInstance().KHARKOV, 15)); // Move the camera instantly to Kharkov with a zoom of 15.
-        map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
-
+        if (ListFragment.getInstance().messagesList == null) {
+            return;
+        }
+        map.clear();
+        LatLng lastPosition = new LatLng(0,0);
+        for (Message message : ListFragment.getInstance().messagesList) {
+            Marker marker = map.addMarker(new MarkerOptions()
+                    .position(message.latLng)
+                    .title(message.userName)
+                    .snippet(message.content));
+            lastPosition = message.latLng;
+        }
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastPosition, 14));
     }
 }

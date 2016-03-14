@@ -32,7 +32,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.mItem = mValues.get(position);
         holder.mUser.setText(mValues.get(position).userName);
         holder.mMessage.setText(mValues.get(position).content);
-        holder.mCoordinate.setText(mValues.get(position).latLng.toString());
+        holder.mCoordinate.setText(mValues.get(position).getLatLng());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,4 +9,8 @@ public class Message {
     public String content;
     public LatLng latLng;
     public long timeStamp;
+
+    public String getLatLng() {
+        return String.format("%.4f, %.4f",latLng.latitude, latLng.longitude);
+    }
 }
