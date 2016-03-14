@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 /**
@@ -19,10 +21,11 @@ import java.util.ArrayList;
  */
 public class ListFragment extends Fragment implements Constant {
 
-    private static ListFragment ourInstance = new ListFragment();
-    private OnListFragmentInteractionListener mListener;
     protected static String name = "Chat";
+    private static ListFragment ourInstance = new ListFragment();
+    final LatLng KHARKOV = new LatLng(49.9944422, 36.2368201);
     protected ArrayList<Message> messagesList;
+    private OnListFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -31,9 +34,6 @@ public class ListFragment extends Fragment implements Constant {
     public ListFragment() {
     }
 
-    public static void fff() {
-        String pp = "sdsds";
-    }
 
     public static ListFragment getInstance() {
         return ourInstance;

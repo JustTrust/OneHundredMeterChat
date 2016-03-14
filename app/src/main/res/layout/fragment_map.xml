@@ -15,7 +15,9 @@
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:background="@android:color/darker_gray"
+        android:padding="9dp" />
 
     <ImageView
         android:id="@+id/map_icon"
@@ -24,6 +26,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
         android:layout_marginTop="18dp"
+        android:background="@android:color/darker_gray"
         android:src="@mipmap/ic_map_icon" />
 
     <ImageView
@@ -33,6 +36,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
+        android:background="@android:color/darker_gray"
         android:padding="6dp"
         android:src="@mipmap/ic_sputnic" />
 
@@ -44,6 +48,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
+        android:background="@android:color/darker_gray"
         android:padding="6dp"
         android:src="@mipmap/ic_map" />
 
@@ -55,6 +60,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
+        android:background="@android:color/darker_gray"
         android:padding="6dp"
         android:src="@mipmap/ic_earth" />
 
