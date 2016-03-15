@@ -1,6 +1,10 @@
 package org.belichenko.a.onehundredmeterchat;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.location.Location;
@@ -9,17 +13,16 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 
-import java.util.Date;
+public class MsgService extends Service implements Constant{
 
-public class MsgService extends Service {
-
-    MyBinder binder = new MyBinder();
-
+    public MyBinder binder = new MyBinder();
+    Location currentLocation;
     private LocationManager locationManager;
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            showLocation(location);
+            currentLocation = location;
+            showNotification(currentLocation);
         }
 
         @Override
@@ -34,7 +37,7 @@ public class MsgService extends Service {
         @Override
         public void onProviderEnabled(String provider) {
             checkEnable();
-            showLocation(locationManager.getLastKnownLocation(provider));
+            showNotification(locationManager.getLastKnownLocation(provider));
         }
 
         @Override
@@ -68,26 +71,27 @@ public class MsgService extends Service {
         }
     }
 
-    private void showLocation(Location location) {
+    private void showNotification(Location location) {
         if (location == null) {
             return;
         }
-        if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
-            //Выводим данные с gps gpsText.setText(formatLocation(location));
-        } else if (location.getProvider().equals(LocationManager.NETWORK_PROVIDER)) {
-            //Выводим данные с network networkText.setText(formatLocation(location));
-        }
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,
+                NOTIFY_ID, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentIntent(contentIntent)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setAutoCancel(true)
+                .setContentTitle("Location changet")
+                .setContentText(location.toString());
+
+        Notification n = builder.build();
+        nm.notify(NOTIFY_ID, n);
     }
 
-    private String formatLocation(Location location) {
-        if (location == null) {
-            return "";
-        }
-
-        return String.format("Coordinates: lat = %1$.4f, lon = %2$.4f, time = %3$tF %3$tT", +
-                location.getLatitude(), location.getLongitude(), new Date(location.getTime()));
-
-    }
 
     private void checkEnable() {
         //gps.setText("Enable: "+locationManager.isProviderEnabled(locationManager.GPS_PROVIDER));

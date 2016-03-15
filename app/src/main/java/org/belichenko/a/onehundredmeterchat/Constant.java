@@ -14,6 +14,7 @@ public interface Constant {
 
     String UPDATE_TIME = PACKAGE_NAME + ".updateTime";
 
+    int NOTIFY_ID = 12;
     int TEN_SECONDS = 10000;
     int TWENTY_SECONDS = 20000;
     int FIVE_SECONDS = 5000;
