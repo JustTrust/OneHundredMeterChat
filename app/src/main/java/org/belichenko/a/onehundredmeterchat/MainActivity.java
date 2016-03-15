@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +25,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements
         ListFragment.OnListFragmentInteractionListener
         , Constant {
 
+    private static final String TAG = "Main activity";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -111,21 +114,34 @@ public class MainActivity extends AppCompatActivity implements
         Toast.makeText(this, "Item selected", Toast.LENGTH_SHORT).show();
     }
 
-    public void sendMessage() {
-        LinkedHashMap<String, String> filter = new LinkedHashMap<>();
-        filter.put("lat", );
-        filter.put("lng", );
-        filter.put("user_id", );
-        filter.put("text", );
-        Retrofit.sendMessage(filter, new Callback<List<Message>>() {
-            @Override
-            public void success(List<Message> messages, Response response) {
+    public void sendNewMessage(String msgText) {
 
+        SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+        String storedName = sharedPref.getString(STORED_NAME, "");
+        if (msgText.isEmpty() || storedName.isEmpty() || msgService == null){
+            Log.d(TAG, "sendMessage() called with: empty parameters ");
+            return;
+        }
+        Location currentLocation = msgService.currentLocation;
+        if (currentLocation == null) {
+            Log.d(TAG, "sendMessage() called with: currentLocation == null ");
+            return;
+        }
+
+        LinkedHashMap<String, String> filter = new LinkedHashMap<>();
+        filter.put("lat", String.valueOf(currentLocation.getLatitude()));
+        filter.put("lng", String.valueOf(currentLocation.getLongitude()));
+        filter.put("user_id", storedName);
+        filter.put("text", msgText);
+        Retrofit.sendMessage(filter, new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+                Toast.makeText(MainActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(getApplicationContext(), "something went wrong :(", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Message don't sent", Toast.LENGTH_SHORT).show();
             }
         });
     }

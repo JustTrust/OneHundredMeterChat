@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,6 +34,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
     private ImageView imageSputnik;
     private ImageView imageEarth;
     private ImageView imageSearch;
+    private EditText messegeText;
 
     public MapFragment() {
     }
@@ -49,6 +51,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
         imageSputnik = (ImageView) view.findViewById(R.id.map_sputnic);
         imageEarth = (ImageView) view.findViewById(R.id.map_earth);
         imageSearch = (ImageView) view.findViewById(R.id.map_send_btn);
+        messegeText = (EditText) view.findViewById(R.id.map_msg_text);
 
         imageMap.setOnClickListener(this);
         imageSputnik.setOnClickListener(this);
@@ -104,7 +107,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
                 map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 break;
             case R.id.map_send_btn:
-                //Кнопка писка должна что-то делать
+                ((MainActivity) getActivity()).sendNewMessage(messegeText.getText().toString());
                 break;
         }
     }
