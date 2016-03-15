@@ -15,6 +15,6 @@ public class Message {
 
 
     public String getLatLng() {
-        return String.format("%.4f, %.4f",latLng.latitude, latLng.longitude);
+        return String.format("%.4f, %.4f",lat, lng);
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,12 @@ import java.util.ArrayList;
  */
 public class ListFragment extends Fragment implements Constant {
 
+    private static final String TAG = "List fragment";
     protected static String name = "Chat";
     private static ListFragment ourInstance = new ListFragment();
     protected ArrayList<Message> messagesList;
     private OnListFragmentInteractionListener mListener;
+    private RecyclerViewAdapter mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,10 +58,10 @@ public class ListFragment extends Fragment implements Constant {
         msg.text = "One more stupid message";
         msg.latLng = new LatLng(49.9944422, 36.2368201);
         messagesList.add(msg);
-
+        mAdapter = new RecyclerViewAdapter(messagesList, mListener);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(App.getAppContext()));
-        recyclerView.setAdapter(new RecyclerViewAdapter(messagesList, mListener));
+        recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
         LinearLayoutManager layoutManager = new LinearLayoutManager(App.getAppContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -83,6 +86,16 @@ public class ListFragment extends Fragment implements Constant {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void updateMessage(ArrayList<Message> msgList) {
+        if (msgList == null) {
+            Log.d(TAG, "updateMessage() called with: " + "msgList = [" + msgList + "]");
+            return;
+        }
+        messagesList.clear();
+        messagesList.addAll(msgList);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**

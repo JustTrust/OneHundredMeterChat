@@ -11,8 +11,11 @@ public interface Constant {
     String MSG_LIMIT = PACKAGE_NAME + ".msgLimit";
 
     String STORED_NAME = PACKAGE_NAME + ".storedName";
-
     String UPDATE_TIME = PACKAGE_NAME + ".updateTime";
+
+    String BROADCAST_ACTION = PACKAGE_NAME + ".BROADCAST_ACTION";
+    String ACTIVITY_EXTRA = PACKAGE_NAME + ".ACTIVITY_EXTRA";
+
 
     int NOTIFY_ID = 12;
     int TEN_SECONDS = 10000;

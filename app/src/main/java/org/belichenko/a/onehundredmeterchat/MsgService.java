@@ -16,8 +16,11 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -27,9 +30,13 @@ import retrofit.client.Response;
 
 public class MsgService extends Service implements Constant {
 
+    private static final String TAG = "Service";
     public MyBinder binder = new MyBinder();
-    Location currentLocation;
+    public Location currentLocation;
+    public List<Message> messageList = new ArrayList<>();
     private LocationManager locationManager;
+
+
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -66,7 +73,7 @@ public class MsgService extends Service implements Constant {
 
         @Override
         public void onProviderDisabled(String provider) {
-            checkEnable();
+
         }
     };
 
@@ -119,6 +126,7 @@ public class MsgService extends Service implements Constant {
         if (location == null) {
             return;
         }
+        updateMessage();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this,
                 NOTIFY_ID, notificationIntent,
@@ -136,13 +144,8 @@ public class MsgService extends Service implements Constant {
         nm.notify(NOTIFY_ID, n);
     }
 
-    private void checkEnable() {
-        //gps.setText("Enable: "+locationManager.isProviderEnabled(locationManager.GPS_PROVIDER));
-        //net.setText("Enable: "+locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER));
 
-    }
-
-    public void updateMessage() {
+    protected void updateMessage() {
 
         if (currentLocation == null) {
             return;
@@ -160,7 +163,17 @@ public class MsgService extends Service implements Constant {
         Retrofit.getMessage(filter, new Callback<List<Message>>() {
             @Override
             public void success(List<Message> messages, Response response) {
-
+                // Broadcast the list of detected activities.
+                if (messages == null) {
+                    Log.d(TAG, "success() called with: "
+                            + "messages = [" + messages + "], response = [" + response + "]");
+                    return;
+                }
+                Intent localIntent = new Intent(BROADCAST_ACTION);
+                localIntent.putExtra(ACTIVITY_EXTRA, "getList");
+                LocalBroadcastManager.getInstance(App.getAppContext()).sendBroadcast(localIntent);
+                messageList.clear();
+                messageList.addAll(messages);
             }
 
             @Override

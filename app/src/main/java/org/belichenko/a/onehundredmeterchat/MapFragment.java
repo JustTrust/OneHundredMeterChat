@@ -3,6 +3,7 @@ package org.belichenko.a.onehundredmeterchat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 /**
  *
  */
 public class MapFragment extends Fragment implements Constant, OnMapReadyCallback, View.OnClickListener {
 
+    private static final String TAG = "Map fragment";
     protected static String name = "Map";
     private static MapFragment ourInstance = new MapFragment();
     private GoogleMap map;
@@ -64,28 +68,27 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        updateMessage();
     }
 
-    public void updateMessage() {
+    public void updateMessage(ArrayList<Message> msgList) {
         if (map == null) {
             return;
         }
-        if (ListFragment.getInstance().messagesList == null) {
+        if (msgList == null) {
+            Log.d(TAG, "updateMessage() called with: " + "msgList = [" + msgList + "]");
             return;
         }
         map.clear();
-        LatLng lastPosition = new LatLng(0, 0);
-        for (Message message : ListFragment.getInstance().messagesList) {
+        LatLng coordinate = new LatLng(0,0);
+        for (Message message : msgList) {
+            coordinate = new LatLng(message.lat, message.lng);
             Marker marker = map.addMarker(new MarkerOptions()
-                    .position(message.latLng)
+                    .position(coordinate)
                     .title(message.user_id)
                     .snippet(message.text));
-            lastPosition = message.latLng;
         }
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastPosition, 14));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 14));
     }
-
 
     //Обработчик нажатия на картинку
     @Override

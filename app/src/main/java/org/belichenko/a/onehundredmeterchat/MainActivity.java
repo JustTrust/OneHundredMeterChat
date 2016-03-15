@@ -1,14 +1,17 @@
 package org.belichenko.a.onehundredmeterchat;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -17,7 +20,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener{
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements
+        ListFragment.OnListFragmentInteractionListener
+        , Constant {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -32,9 +39,11 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
     /**
      * The {@link ViewPager} that will host the section contents.
      */
+    private MsgService msgService;
     private ViewPager mViewPager;
     private boolean isServiceRunning = false;
     private ServiceConnection serviceConnection;
+    protected ActivityDetectionBroadcastReceiver mBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 isServiceRunning = true;
+                msgService = ((MsgService.MyBinder) service).getService();
             }
 
             @Override
@@ -61,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
                 isServiceRunning = false;
             }
         };
+
+        // Get a receiver for broadcasts from ActivityDetectionIntentService.
+        mBroadcastReceiver = new ActivityDetectionBroadcastReceiver();
     }
 
     @Override
@@ -69,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
         if (!isServiceRunning) {
             bindService(new Intent(this, MsgService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         }
+        // Register the broadcast receiver that informs this activity of the DetectedActivity
+        // object broadcast sent by the intent service.
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver,
+                new IntentFilter(BROADCAST_ACTION));
     }
 
     @Override
@@ -78,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
             unbindService(serviceConnection);
             isServiceRunning = false;
         }
+        // Unregister the broadcast receiver that was registered during onResume().
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
     }
 
     @Override
@@ -167,6 +186,31 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
                     return SettingFragment.name;
             }
             return null;
+        }
+    }
+
+    /**
+     * Receiver for intents sent by DetectedActivitiesIntentService via a sendBroadcast().
+     * Receives a list of one or more DetectedActivity objects associated with the current state of
+     * the device.
+     */
+    public class ActivityDetectionBroadcastReceiver extends BroadcastReceiver {
+        protected static final String TAG = "activity-detection-response-receiver";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (msgService == null) {
+                return;
+            }
+            Bundle bundle = intent.getExtras();
+            String updateType = bundle.getString(ACTIVITY_EXTRA);
+            if (updateType != null && updateType.equals("getList")) {
+                if (isServiceRunning) {
+                    ArrayList<Message> messageList = (ArrayList<Message>) msgService.messageList;
+                    MapFragment.getInstance().updateMessage(messageList);
+                    ListFragment.getInstance().updateMessage(messageList);
+                }
+            }
         }
     }
 }
