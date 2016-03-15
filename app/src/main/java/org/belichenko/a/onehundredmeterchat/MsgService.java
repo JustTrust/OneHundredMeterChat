@@ -1,19 +1,22 @@
 package org.belichenko.a.onehundredmeterchat;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 
-public class MsgService extends Service implements Constant{
+public class MsgService extends Service implements Constant {
 
     public MyBinder binder = new MyBinder();
     Location currentLocation;
@@ -24,6 +27,7 @@ public class MsgService extends Service implements Constant{
             currentLocation = location;
             showNotification(currentLocation);
         }
+
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -36,7 +40,18 @@ public class MsgService extends Service implements Constant{
 
         @Override
         public void onProviderEnabled(String provider) {
-            checkEnable();
+
+
+            if (ActivityCompat.checkSelfPermission(App.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(App.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             showNotification(locationManager.getLastKnownLocation(provider));
         }
 
@@ -58,17 +73,35 @@ public class MsgService extends Service implements Constant{
     public void onCreate() {
         super.onCreate();
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TEN_SECONDS, TEN_METERS, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TEN_SECONDS, TEN_METERS, locationListener);
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    class MyBinder extends Binder {
-        MsgService getService() {
-            return MsgService.this;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
+        locationManager.removeUpdates(locationListener);
     }
 
     private void showNotification(Location location) {
@@ -92,9 +125,15 @@ public class MsgService extends Service implements Constant{
         nm.notify(NOTIFY_ID, n);
     }
 
-
     private void checkEnable() {
         //gps.setText("Enable: "+locationManager.isProviderEnabled(locationManager.GPS_PROVIDER));
         //net.setText("Enable: "+locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER));
+
+    }
+
+    class MyBinder extends Binder {
+        MsgService getService() {
+            return MsgService.this;
+        }
     }
 }
