@@ -90,7 +90,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
                     .title(message.user_id)
                     .snippet(message.text));
         }
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 14));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18));
     }
 
     //Обработчик нажатия на картинку
