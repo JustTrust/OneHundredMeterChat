@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'MyAndroidKey'
-            keyPassword '7487'
-            storeFile file('D:/Java/SourseIt/OneHundredMeterChat/keystore.jks')
-            storePassword '7487'
+            keyAlias 'onehundredmeterchat'
+            keyPassword 'android'
+            storeFile file('D:/keystore.jks')
+            storePassword 'android'
         }
     }
     compileSdkVersion 23
