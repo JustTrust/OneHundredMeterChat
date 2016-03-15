@@ -29,14 +29,14 @@
         android:weightSum="10">
 
         <EditText
-            android:id="@+id/map_msg_text"
+            android:id="@+id/list_msg_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="8" />
 
         <ImageView
-            android:id="@+id/map_send_btn"
+            android:id="@+id/list_send_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
