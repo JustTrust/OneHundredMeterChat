@@ -56,13 +56,14 @@ public class ListFragment extends Fragment implements Constant {
         msg.latLng = new LatLng(49.9944422, 36.2368201);
         messagesList.add(msg);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new RecyclerViewAdapter(messagesList, mListener));
-        }
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(App.getAppContext()));
+        recyclerView.setAdapter(new RecyclerViewAdapter(messagesList, mListener));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(App.getAppContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
         return view;
     }
 
