@@ -137,7 +137,6 @@ public class LoginActivity extends AppCompatActivity implements Constant {
 
                 Intent activityIntent = new Intent(App.getAppContext(), MainActivity.class);
                 startActivity(activityIntent);
-
             }
         });
         mContentView.setOnClickListener(new View.OnClickListener() {
