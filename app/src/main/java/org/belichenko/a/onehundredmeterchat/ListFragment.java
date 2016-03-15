@@ -50,9 +50,9 @@ public class ListFragment extends Fragment implements Constant {
         messagesList = new ArrayList<>();
         // TODO: 14.03.2016 remove when we get server
         Message msg = new Message();
-        msg.id = "1";
-        msg.userName = "Vasiliy";
-        msg.content = "One more stupid message";
+        msg.id = 1;
+        msg.user_id = "Vasiliy";
+        msg.text = "One more stupid message";
         msg.latLng = new LatLng(49.9944422, 36.2368201);
         messagesList.add(msg);
 

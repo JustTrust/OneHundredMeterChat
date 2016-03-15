@@ -15,6 +15,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MsgService extends Service implements Constant {
 
@@ -61,6 +69,7 @@ public class MsgService extends Service implements Constant {
         }
     };
 
+
     public MsgService() {
     }
 
@@ -85,6 +94,7 @@ public class MsgService extends Service implements Constant {
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TEN_SECONDS, TEN_METERS, locationListener);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TEN_SECONDS, TEN_METERS, locationListener);
+
 
     }
 
@@ -129,6 +139,20 @@ public class MsgService extends Service implements Constant {
         //gps.setText("Enable: "+locationManager.isProviderEnabled(locationManager.GPS_PROVIDER));
         //net.setText("Enable: "+locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER));
 
+    }
+
+    public void ubdateMessage() {
+        Retrofit.getMessage(new Callback<List<Message>>() {
+            @Override
+            public void success(List<Message> messages, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(getApplicationContext(), "something went wrong :(", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     class MyBinder extends Binder {

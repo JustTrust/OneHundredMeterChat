@@ -79,8 +79,8 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
         for (Message message : ListFragment.getInstance().messagesList) {
             Marker marker = map.addMarker(new MarkerOptions()
                     .position(message.latLng)
-                    .title(message.userName)
-                    .snippet(message.content));
+                    .title(message.user_id)
+                    .snippet(message.text));
             lastPosition = message.latLng;
         }
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastPosition, 14));
