@@ -11,4 +11,6 @@
     app:layoutManager="LinearLayoutManager"
     tools:context=".ListFragment"
     tools:listitem="@layout/list_item"
-    android:background="@color/colorPrimaryDark"/>
+    android:background="@color/colorPrimaryDark"
+    tools:showIn="@layout/list_item"/>
+

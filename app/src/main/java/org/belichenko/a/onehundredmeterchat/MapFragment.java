@@ -44,7 +44,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
         imageMap = (ImageView) view.findViewById(R.id.map_map);
         imageSputnik = (ImageView) view.findViewById(R.id.map_sputnic);
         imageEarth = (ImageView) view.findViewById(R.id.map_earth);
-        imageSearch = (ImageView) view.findViewById(R.id.map_icon);
+        imageSearch = (ImageView) view.findViewById(R.id.map_send_btn);
 
         imageMap.setOnClickListener(this);
         imageSputnik.setOnClickListener(this);
@@ -100,7 +100,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
             case R.id.map_sputnic:
                 map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 break;
-            case R.id.map_icon:
+            case R.id.map_send_btn:
                 //Кнопка писка должна что-то делать
                 break;
         }
