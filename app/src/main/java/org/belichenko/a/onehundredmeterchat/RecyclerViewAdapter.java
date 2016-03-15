@@ -30,8 +30,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mUser.setText(mValues.get(position).userName);
-        holder.mMessage.setText(mValues.get(position).content);
+        holder.mUser.setText(mValues.get(position).user_id);
+        holder.mMessage.setText(mValues.get(position).text);
         holder.mCoordinate.setText(mValues.get(position).getLatLng());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
