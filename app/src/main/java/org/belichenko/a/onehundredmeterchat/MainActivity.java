@@ -21,6 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 
 public class MainActivity extends AppCompatActivity implements
         ListFragment.OnListFragmentInteractionListener
@@ -102,6 +109,25 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onListFragmentInteraction(Message message) {
         Toast.makeText(this, "Item selected", Toast.LENGTH_SHORT).show();
+    }
+
+    public void sendMessage() {
+        LinkedHashMap<String, String> filter = new LinkedHashMap<>();
+        filter.put("lat", );
+        filter.put("lng", );
+        filter.put("user_id", );
+        filter.put("text", );
+        Retrofit.sendMessage(filter, new Callback<List<Message>>() {
+            @Override
+            public void success(List<Message> messages, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(getApplicationContext(), "something went wrong :(", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
