@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -20,7 +22,7 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ListFragment extends Fragment implements Constant {
+public class ListFragment extends Fragment implements Constant, View.OnClickListener {
 
     private static final String TAG = "List fragment";
     protected static String name = "Chat";
@@ -28,6 +30,8 @@ public class ListFragment extends Fragment implements Constant {
     protected ArrayList<Message> messagesList;
     private OnListFragmentInteractionListener mListener;
     private RecyclerViewAdapter mAdapter;
+    private ImageView imageList;
+    private EditText textList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -44,12 +48,17 @@ public class ListFragment extends Fragment implements Constant {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
+        imageList = (ImageView) view.findViewById(R.id.list_send_btn);
+        textList = (EditText) view.findViewById(R.id.list_msg_text);
+
+        imageList.setOnClickListener(this);
         messagesList = new ArrayList<>();
         // TODO: 14.03.2016 remove when we get server
         Message msg = new Message();
@@ -96,6 +105,16 @@ public class ListFragment extends Fragment implements Constant {
         messagesList.clear();
         messagesList.addAll(msgList);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.list_send_btn:
+                ((MainActivity) getActivity()).sendNewMessage(messegeText.getText().toString());
+                break;
+
+        }
     }
 
     /**
