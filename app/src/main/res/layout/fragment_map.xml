@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="@dimen/map_bt_padding"
-        android:background="@color/black_overlay"
+        android:background="@color/white_overlay"
         android:weightSum="10">
 
         <EditText
@@ -43,6 +43,7 @@
         android:orientation="vertical"
         android:layout_marginRight="@dimen/map_bt_padding"
         android:layout_marginEnd="@dimen/map_bt_padding"
+        android:background="@color/white_overlay"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true">
 
@@ -50,7 +51,6 @@
             android:id="@+id/map_earth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/black_overlay"
             android:padding="@dimen/map_bt_padding"
             android:src="@mipmap/ic_earth" />
 
@@ -58,7 +58,6 @@
             android:id="@+id/map_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/black_overlay"
             android:padding="@dimen/map_bt_padding"
             android:src="@mipmap/ic_map" />
 
@@ -66,7 +65,6 @@
             android:id="@+id/map_sputnic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/black_overlay"
             android:padding="@dimen/map_bt_padding"
             android:src="@mipmap/ic_sputnic" />
 
