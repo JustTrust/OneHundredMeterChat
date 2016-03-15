@@ -24,21 +24,12 @@ public class Retrofit {
         apiInterface = restAdapter.create(ApiInterface.class);
     }
 
-    public static void getMessage(Map<String, String> filters, Callback<Message> callback) {
+    public static void getMessage(Map<String, String> filters, Callback<List<Message>> callback) {
         apiInterface.getMessage(filters, callback);
     }
 
     interface ApiInterface {
         @GET("/hakaton/api.php")
-            //void getMessage(Callback<List<Message>> callback);
-        void getMessage(@QueryMap Map<String, String> filters, Callback<Message> callback);
-
-//        @GET("https://restcountries.eu/rest/v1/name/{country}")
-//        void getCountry(@Path("country") String name, Callback<List<Country>> callback);
+        void getMessage(@QueryMap Map<String, String> filters, Callback<List<Message>> callback);
     }
-
-//    public static void getCountry(String country, Callback<List<Country>> callback) {
-//        apiInterface.getCountry(country, callback);
-//    }
-
 }

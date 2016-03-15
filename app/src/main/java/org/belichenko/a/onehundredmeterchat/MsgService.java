@@ -7,17 +7,18 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Binder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import retrofit.Callback;
@@ -141,8 +142,22 @@ public class MsgService extends Service implements Constant {
 
     }
 
-    public void ubdateMessage() {
-        Retrofit.getMessage(new Callback<List<Message>>() {
+    public void updateMessage() {
+
+        if (currentLocation == null) {
+            return;
+        }
+
+        SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+        String radius = sharedPref.getString(RADIUS, "100");
+        String limit = sharedPref.getString(MSG_LIMIT, "20");
+        LinkedHashMap<String, String> filter = new LinkedHashMap<>();
+        filter.put("lat", String.valueOf(currentLocation.getLatitude()));
+        filter.put("lng", String.valueOf(currentLocation.getLongitude()));
+        filter.put("radius", radius);
+        filter.put("limit", limit);
+
+        Retrofit.getMessage(filter, new Callback<List<Message>>() {
             @Override
             public void success(List<Message> messages, Response response) {
 
