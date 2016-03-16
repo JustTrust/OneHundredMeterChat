@@ -34,7 +34,8 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="adjustPan" />.
+        //android:windowSoftInputMode="stateHidden"
 
         <service
             android:name=".MsgService"
