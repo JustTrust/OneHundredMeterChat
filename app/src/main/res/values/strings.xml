@@ -14,4 +14,8 @@
     <string name="limit_string">Message limit</string>
     <string name="radius_string">Message radius</string>
     <string name="logut_text">Logout</string>
+    <string name="accuracy_text">Accuracy</string>
+    <string name="text_accuracy1">high</string>
+    <string name="text_accuracy2">low</string>
+
 </resources>

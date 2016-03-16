@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import com.google.android.gms.location.LocationRequest;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,6 +31,8 @@ public class SettingFragment extends Fragment implements Constant{
     EditText mRadius;
     @Bind(R.id.setting_limit)
     EditText mLimit;
+    @Bind(R.id.rg_accuracy)
+    RadioGroup rgAccuracy;
 
     private static SettingFragment ourInstance = new SettingFragment();
     protected static String name = "Setting";
@@ -44,14 +50,48 @@ public class SettingFragment extends Fragment implements Constant{
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         ButterKnife.bind(this, view);
         updateSettings();
+        setListeners();
         return view;
     }
 
     private void updateSettings() {
+
         SharedPreferences sharedPref = App.getAppContext()
                 .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         mLimit.setText(sharedPref.getString(MSG_LIMIT, "20"));
         mRadius.setText(sharedPref.getString(RADIUS, "100"));
+
+        String nameAccuracy = sharedPref.getString(STORED_ACCURACY, getString(R.string.text_accuracy1));
+        RadioButton rbAccuracy;
+        if (nameAccuracy.equals(getString(R.string.text_accuracy1))) {
+            rbAccuracy = (RadioButton) rgAccuracy.getChildAt(0);
+        } else {
+            rbAccuracy = (RadioButton) rgAccuracy.getChildAt(1);
+        }
+        if (rbAccuracy != null) {
+            rbAccuracy.setChecked(true);
+        }
+    }
+
+    private void setListeners() {
+
+        rgAccuracy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                SharedPreferences mPrefs = App.getAppContext()
+                        .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = mPrefs.edit();
+                RadioButton rb = (RadioButton) rgAccuracy.findViewById(checkedId);
+                if (rb.getText().toString().equals(getString(R.string.text_accuracy1))) {
+                    edit.putInt(ACCURACY, LocationRequest.PRIORITY_HIGH_ACCURACY);
+                }else{
+                    edit.putInt(ACCURACY, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                }
+                edit.putString(STORED_ACCURACY, rb.getText().toString());
+                edit.apply();
+            }
+        });
+
     }
 
     @Override

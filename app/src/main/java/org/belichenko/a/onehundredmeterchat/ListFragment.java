@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 
 /**
@@ -60,13 +58,6 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
 
         imageList.setOnClickListener(this);
         messagesList = new ArrayList<>();
-        // TODO: 14.03.2016 remove when we get server
-        Message msg = new Message();
-        msg.id = 1;
-        msg.user_id = "Vasiliy";
-        msg.text = "One more stupid message";
-        msg.latLng = new LatLng(49.9944422, 36.2368201);
-        messagesList.add(msg);
         mAdapter = new RecyclerViewAdapter(messagesList, mListener);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(App.getAppContext()));

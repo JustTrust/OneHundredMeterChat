@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.belichenko.a.onehundredmeterchat.ListFragment.OnListFragmentInteractionListener;
@@ -35,14 +36,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         SharedPreferences sharedPref = App.getAppContext()
                 .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         String storedName = sharedPref.getString(STORED_NAME, "");
+
         if (mValues.get(position).user_id.equals(storedName)) {
-            holder.mView.setBackgroundColor(App.getAppContext().getResources()
+            holder.mViewContainer.setBackgroundColor(App.getAppContext().getResources()
                     .getColor(R.color.colorPrimaryLight));
+        }else{
+            holder.mViewContainer.setBackgroundColor(App.getAppContext().getResources()
+                    .getColor(R.color.white_overlay));
         }
         holder.mItem = mValues.get(position);
         holder.mUser.setText(mValues.get(position).user_id);
         holder.mMessage.setText(mValues.get(position).text);
-        holder.mCoordinate.setText(mValues.get(position).getLatLng());
+        holder.mCoordinate.setText(mValues.get(position).time);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
+        public final RelativeLayout mViewContainer;
         public final TextView mUser;
         public final TextView mMessage;
         public final TextView mCoordinate;
@@ -71,9 +77,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            mViewContainer = (RelativeLayout) view.findViewById(R.id.list_item_container);
             mUser = (TextView) view.findViewById(R.id.user_list);
             mMessage = (TextView) view.findViewById(R.id.message_list);
-            mCoordinate = (TextView) view.findViewById(R.id.coordinates_list);
+            mCoordinate = (TextView) view.findViewById(R.id.time_list);
         }
 
         @Override

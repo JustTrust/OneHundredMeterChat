@@ -1,36 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@color/white_overlay">
+    android:padding="@dimen/view_padding">
 
-    <TextView
-        android:id="@+id/user_list"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/view_marging"
-        tools:text="Vasiliy"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:textStyle="bold" />
+        android:id="@+id/list_item_container"
+        android:background="@color/white_overlay"
+        android:orientation="horizontal"
+        android:padding="@dimen/view_padding">
 
-    <TextView
-        android:id="@+id/coordinates_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/view_marging"
-        tools:text="40.2658-36.23589"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_toRightOf="@+id/user_list" />
+        <TextView
+            android:id="@+id/user_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/view_padding"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textStyle="bold"
+            tools:text="Vasiliy" />
 
-    <TextView
-        android:id="@+id/message_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/view_marging"
-        tools:text="One more stupid message"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_below="@+id/user_list" />
+        <TextView
+            android:id="@+id/time_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/view_padding"
+            android:layout_toRightOf="@+id/user_list"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:text="15:30 26-08-2106" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/message_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_list"
+            android:layout_margin="@dimen/view_padding"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:text="One more stupid message" />
+    </RelativeLayout>
+</FrameLayout>

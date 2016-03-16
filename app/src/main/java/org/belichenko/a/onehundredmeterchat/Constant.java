@@ -16,6 +16,8 @@ public interface Constant {
     String BROADCAST_ACTION = PACKAGE_NAME + ".BROADCAST_ACTION";
     String ACTIVITY_EXTRA = PACKAGE_NAME + ".ACTIVITY_EXTRA";
 
+    String STORED_ACCURACY = PACKAGE_NAME + ".storedAccuracy";
+    String ACCURACY = PACKAGE_NAME + ".accuracy";
 
     int NOTIFY_ID = 12;
     int TEN_SECONDS = 10000;

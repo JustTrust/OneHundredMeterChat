@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/limit_layout"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:background="@color/white_overlay"
         android:orientation="horizontal"
         android:weightSum="10"
         android:layout_alignParentTop="true"
@@ -48,10 +47,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/radius_layout"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:background="@color/white_overlay"
+
         android:orientation="horizontal"
         android:weightSum="10"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/limit_layout"
         android:layout_marginLeft="@dimen/map_bt_padding"
         android:layout_marginRight="@dimen/map_bt_padding"
@@ -78,12 +77,55 @@
             android:padding="@dimen/view_padding" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/map_bt_padding"
+        android:layout_marginRight="@dimen/map_bt_padding"
+        android:layout_marginBottom="@dimen/map_bt_padding"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:layout_below="@+id/radius_layout">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="6"
+            android:text="@string/accuracy_text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:text="@string/accuracy_text"
+            android:padding="@dimen/view_padding"/>
+
+        <RadioGroup
+            android:id="@+id/rg_accuracy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButton_accuracy1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/appbar_padding_top"
+                android:layout_marginRight="@dimen/appbar_padding_top"
+                android:text="@string/text_accuracy1" />
+
+            <RadioButton
+                android:id="@+id/radioButton_accuracy2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_accuracy2" />
+        </RadioGroup>
+    </LinearLayout>
     <EditText
         android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/logut_text"
-        android:layout_below="@+id/radius_layout"
         android:clickable="true"
         android:enabled="true"
         android:gravity="center_horizontal"
@@ -92,6 +134,7 @@
         android:singleLine="true"
         android:inputType="none"
         android:editable="false"
-        android:layout_margin="@dimen/activity_vertical_margin" />
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
