@@ -11,13 +11,17 @@ public interface Constant {
     String MSG_LIMIT = PACKAGE_NAME + ".msgLimit";
 
     String STORED_NAME = PACKAGE_NAME + ".storedName";
-    String UPDATE_TIME = PACKAGE_NAME + ".updateTime";
+    String CURRENT_LAT = PACKAGE_NAME + ".currentLat";
+    String CURRENT_LON = PACKAGE_NAME + ".currentLon";
+    String CURRENT_LOCATION = PACKAGE_NAME + ".currentLocation";
 
     String BROADCAST_ACTION = PACKAGE_NAME + ".BROADCAST_ACTION";
     String ACTIVITY_EXTRA = PACKAGE_NAME + ".ACTIVITY_EXTRA";
 
     String STORED_ACCURACY = PACKAGE_NAME + ".storedAccuracy";
     String ACCURACY = PACKAGE_NAME + ".accuracy";
+    String MESSAGE_LIST = PACKAGE_NAME + ".messageList";
+
 
     int NOTIFY_ID = 12;
     int TEN_SECONDS = 10000;

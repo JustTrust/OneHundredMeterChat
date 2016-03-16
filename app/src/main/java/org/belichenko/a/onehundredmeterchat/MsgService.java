@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -25,8 +26,10 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -45,8 +48,7 @@ public class MsgService extends Service implements Constant
     public List<Message> messageList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
-
+    Handler handler;
 
     public MsgService() {
     }
@@ -59,19 +61,49 @@ public class MsgService extends Service implements Constant
     @Override
     public void onCreate() {
         super.onCreate();
+        readData();
         buildGoogleApiClient();
         createLocationRequest();
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
+        addHandler();
+        updateMessage();
+    }
+
+    private void addHandler() {
+        handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(android.os.Message msg) {
+                updateMessage();
+                handler.sendEmptyMessageDelayed(1, TWENTY_SECONDS);
+                return true;
+            }
+        });
+        handler.sendEmptyMessageDelayed(1, TWENTY_SECONDS);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        handler.removeMessages(1);
         stopLocationUpdates();
         saveData();
+    }
+
+    private void readData() {
+        SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+
+        if (sharedPref.contains(CURRENT_LOCATION)) {
+            String jsonLoc = sharedPref.getString(CURRENT_LOCATION, null);
+            currentLocation = gson.fromJson(jsonLoc, Location.class);
+        }
+        if (sharedPref.contains(MESSAGE_LIST)) {
+            String jsonMsg = sharedPref.getString(MESSAGE_LIST, null);
+            Message[] tempList = gson.fromJson(jsonMsg, Message[].class);
+            messageList = Arrays.asList(tempList);
+        }
     }
 
     protected void stopLocationUpdates() {
@@ -108,7 +140,10 @@ public class MsgService extends Service implements Constant
 
     @Override
     public void onConnected(Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this
+                , Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this
+                , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -116,13 +151,14 @@ public class MsgService extends Service implements Constant
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            Log.d(TAG, "onConnected() called with: " + "not permissions");
             return;
         }
         Location mLastLocation = LocationServices.FusedLocationApi
                 .getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
             currentLocation = mLastLocation;
-            updateMessage();
+            showNotification();
         }
         startLocationUpdates();
     }
@@ -141,7 +177,7 @@ public class MsgService extends Service implements Constant
     public void onLocationChanged(Location location) {
         if (location != null) {
             currentLocation = location;
-            updateMessage();
+            showNotification();
         }
     }
 
@@ -149,7 +185,10 @@ public class MsgService extends Service implements Constant
      * Requests location updates from the FusedLocationApi.
      */
     protected void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this
+                , Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this
+                , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -157,6 +196,7 @@ public class MsgService extends Service implements Constant
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            Log.d(TAG, "startLocationUpdates() called with: " + "not permissions");
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(
@@ -165,7 +205,7 @@ public class MsgService extends Service implements Constant
                 this
         ).setResultCallback(new ResultCallback<Status>() {
             @Override
-            public void onResult(Status status) {
+            public void onResult(@NonNull Status status) {
                 Log.d(TAG, "startLocationUpdates() called with: " + "status = [" + status + "]");
             }
         });
@@ -173,7 +213,16 @@ public class MsgService extends Service implements Constant
     }
 
     private void saveData() {
+        if (currentLocation != null) {
+            SharedPreferences mPrefs = App.getAppContext()
+                    .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit = mPrefs.edit();
+            Gson gson = new Gson();
 
+            edit.putString(CURRENT_LOCATION, gson.toJson(currentLocation));
+            edit.putString(MESSAGE_LIST, gson.toJson(messageList));
+            edit.apply();
+        }
     }
 
     private void showNotification() {
@@ -197,7 +246,7 @@ public class MsgService extends Service implements Constant
     }
 
 
-    protected void updateMessage() {
+    private void updateMessage() {
 
         if (currentLocation == null) {
             return;
@@ -218,19 +267,19 @@ public class MsgService extends Service implements Constant
                 // Broadcast the list of detected activities.
                 if (messages == null) {
                     Log.d(TAG, "success() called with: "
-                            + "messages = [" + messages + "], response = [" + response + "]");
+                            + "messages = [" + null + "], response = [" + response + "]");
                     return;
                 }
+                messageList.clear();
+                messageList.addAll(messages);
                 Intent localIntent = new Intent(BROADCAST_ACTION);
                 localIntent.putExtra(ACTIVITY_EXTRA, "getList");
                 LocalBroadcastManager.getInstance(App.getAppContext()).sendBroadcast(localIntent);
-                messageList.clear();
-                messageList.addAll(messages);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(getApplicationContext(), "something went wrong :(", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Check your internet connection", Toast.LENGTH_LONG).show();
             }
         });
     }
