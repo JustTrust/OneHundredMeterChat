@@ -73,7 +73,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
-            android:maxLength="3"
+            android:maxLength="4"
             android:layout_weight="4"
             android:padding="@dimen/view_padding" />
     </LinearLayout>

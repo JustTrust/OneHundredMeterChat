@@ -127,8 +127,8 @@ public class MsgService extends Service implements Constant {
             return;
         }
         updateMessage();
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this,
+        Intent notificationIntent = new Intent(App.getAppContext(), MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(App.getAppContext(),
                 NOTIFY_ID, notificationIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

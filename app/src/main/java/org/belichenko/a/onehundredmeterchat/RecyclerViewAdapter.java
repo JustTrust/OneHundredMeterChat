@@ -1,5 +1,7 @@
 package org.belichenko.a.onehundredmeterchat;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,8 @@ import org.belichenko.a.onehundredmeterchat.ListFragment.OnListFragmentInteracti
 
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
+            implements Constant{
 
     private final List<Message> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -29,6 +32,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        SharedPreferences sharedPref = App.getAppContext()
+                .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+        String storedName = sharedPref.getString(STORED_NAME, "");
+        if (mValues.get(position).user_id.equals(storedName)) {
+            holder.mView.setBackgroundColor(App.getAppContext().getResources()
+                    .getColor(R.color.colorPrimaryLight));
+        }
         holder.mItem = mValues.get(position);
         holder.mUser.setText(mValues.get(position).user_id);
         holder.mMessage.setText(mValues.get(position).text);
