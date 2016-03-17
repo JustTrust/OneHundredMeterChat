@@ -15,10 +15,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -47,6 +46,13 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        if (supportMapFragment == null) {
+            supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
+        }
+        if (map == null) {
+            supportMapFragment.getMapAsync(this);
+        }
         imageMap = (ImageView) view.findViewById(R.id.map_map);
         imageSputnik = (ImageView) view.findViewById(R.id.map_sputnic);
         imageEarth = (ImageView) view.findViewById(R.id.map_earth);
@@ -58,12 +64,6 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
         imageEarth.setOnClickListener(this);
         imageSearch.setOnClickListener(this);
 
-        if (supportMapFragment == null) {
-            supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
-        }
-        if (supportMapFragment != null) {
-            supportMapFragment.getMapAsync(this);
-        }
         return view;
     }
 
@@ -72,36 +72,35 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
         map = googleMap;
     }
 
-    public void updateMessage(ArrayList<Message> msgList) {
+    public void updateMessages(LinkedList<Message> msgList) {
         if (map == null) {
             return;
         }
         if (msgList == null) {
-            Log.d(TAG, "updateMessage() called with: " + "msgList = [" + msgList + "]");
+            Log.d(TAG, "updateMessages() called with: " + "msgList = [" + null + "]");
             return;
         }
         map.clear();
         for (Message message : msgList) {
-            Marker marker = map.addMarker(new MarkerOptions()
+            map.addMarker(new MarkerOptions()
                     .position(new LatLng(message.lat, message.lng))
                     .title(message.user_id)
                     .snippet(message.text));
         }
         // show last msg on the map
-        if (msgList.size() > 0){
+        if (msgList.size() > 0) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                    new LatLng(msgList.get(0).lat, msgList.get(0).lng), 16));
+                    new LatLng(msgList.getFirst().lat, msgList.getFirst().lng), 14));
         }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateMessage(((MainActivity) getActivity()).getMsgList());
+        updateMessages(((MainActivity) getActivity()).getMsgList());
     }
 
-    //Обработчик нажатия на картинку
+    //Обработчик нажатия на кнопки
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -119,5 +118,10 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
                 messegeText.setText("");
                 break;
         }
+    }
+
+    public void showMsgOnMap(Message message) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(message.lat, message.lng), 18));
     }
 }

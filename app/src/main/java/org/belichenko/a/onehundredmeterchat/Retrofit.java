@@ -1,6 +1,6 @@
 package org.belichenko.a.onehundredmeterchat;
 
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -34,7 +34,7 @@ public class Retrofit {
     }
 
 
-    public static void getMessage(Map<String, String> filters, Callback<List<Message>> callback) {
+    public static void getMessage(Map<String, String> filters, Callback<LinkedList<Message>> callback) {
         getInterface.getMessage(filters, callback);
 
     }
@@ -46,7 +46,7 @@ public class Retrofit {
 
     interface GetInterface {
         @GET("/hakaton/api.php")
-        void getMessage(@QueryMap Map<String, String> filters, Callback<List<Message>> callback);
+        void getMessage(@QueryMap Map<String, String> filters, Callback<LinkedList<Message>> callback);
 
     }
     interface PostInterface {

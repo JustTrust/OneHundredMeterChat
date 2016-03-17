@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/view_padding">
+    android:padding="@dimen/view_padding"
+    >
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/list_item_container"
-        android:background="@color/white_overlay"
+        android:background="@color/blue_msg"
         android:orientation="horizontal"
         android:padding="@dimen/view_padding">
 

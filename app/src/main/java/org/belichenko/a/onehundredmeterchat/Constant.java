@@ -6,13 +6,9 @@ package org.belichenko.a.onehundredmeterchat;
 public interface Constant {
     String PACKAGE_NAME = "org.belichenko.a.onehundredmeterchat";
     String STORAGE_OF_SETTINGS = PACKAGE_NAME + ".storageOfSettings";
-
+    String STORED_NAME = PACKAGE_NAME + ".storedName";
     String RADIUS = PACKAGE_NAME + ".radius";
     String MSG_LIMIT = PACKAGE_NAME + ".msgLimit";
-
-    String STORED_NAME = PACKAGE_NAME + ".storedName";
-    String CURRENT_LAT = PACKAGE_NAME + ".currentLat";
-    String CURRENT_LON = PACKAGE_NAME + ".currentLon";
     String CURRENT_LOCATION = PACKAGE_NAME + ".currentLocation";
 
     String BROADCAST_ACTION = PACKAGE_NAME + ".BROADCAST_ACTION";
@@ -22,11 +18,9 @@ public interface Constant {
     String ACCURACY = PACKAGE_NAME + ".accuracy";
     String MESSAGE_LIST = PACKAGE_NAME + ".messageList";
 
-
     int NOTIFY_ID = 12;
     int TEN_SECONDS = 10000;
     int TWENTY_SECONDS = 20000;
     int FIVE_SECONDS = 5000;
     int ONE_MINUTE = 60000;
-    int TEN_METERS = 10;
 }

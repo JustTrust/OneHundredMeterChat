@@ -17,5 +17,6 @@
     <string name="accuracy_text">Accuracy</string>
     <string name="text_accuracy1">high</string>
     <string name="text_accuracy2">low</string>
+    <string name="new_msg">New msg: </string>
 
 </resources>

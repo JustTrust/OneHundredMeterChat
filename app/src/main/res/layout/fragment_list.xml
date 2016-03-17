@@ -33,7 +33,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="8" />
+            android:layout_weight="8"
+            android:hint="@string/new_msg"/>
 
         <ImageView
             android:id="@+id/list_send_btn"

@@ -28,10 +28,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.LinkedList;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -45,7 +44,7 @@ public class MsgService extends Service implements Constant
     private static final String TAG = "Service";
     public MyBinder binder = new MyBinder();
     public Location currentLocation;
-    public ArrayList<Message> messageList = new ArrayList<>();
+    public LinkedList<Message> messageList = new LinkedList<>();
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     Handler handler;
@@ -138,7 +137,7 @@ public class MsgService extends Service implements Constant
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(TWENTY_SECONDS);
         mLocationRequest.setFastestInterval(TEN_SECONDS);
-        mLocationRequest.setPriority(sharedPref.getInt(ACCURACY, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY));
+        mLocationRequest.setPriority(sharedPref.getInt(ACCURACY, LocationRequest.PRIORITY_HIGH_ACCURACY));
     }
 
     @Override
@@ -157,12 +156,7 @@ public class MsgService extends Service implements Constant
             Log.d(TAG, "onConnected() called with: " + "not permissions");
             return;
         }
-        Location mLastLocation = LocationServices.FusedLocationApi
-                .getLastLocation(mGoogleApiClient);
-
-        currentLocation = mLastLocation;
-        showNotification();
-
+        currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         startLocationUpdates();
     }
 
@@ -179,7 +173,6 @@ public class MsgService extends Service implements Constant
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
-        showNotification();
     }
 
     /**
@@ -226,8 +219,8 @@ public class MsgService extends Service implements Constant
         }
     }
 
-    private void showNotification() {
-        if (currentLocation == null) {
+    private void showNotification(Message message) {
+        if (message == null) {
             return;
         }
         Intent notificationIntent = new Intent(App.getAppContext(), MainActivity.class);
@@ -239,10 +232,10 @@ public class MsgService extends Service implements Constant
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentIntent(contentIntent)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.message_icon)
                 .setAutoCancel(true)
-                .setContentTitle("Location changed")
-                .setContentText(currentLocation.toString());
+                .setContentTitle(getString(R.string.new_msg) +" "+ message.user_id)
+                .setContentText(message.text);
 
         Notification n = builder.build();
         nm.notify(NOTIFY_ID, n);
@@ -263,20 +256,32 @@ public class MsgService extends Service implements Constant
         filter.put("radius", radius);
         filter.put("limit", limit);
 
-        Retrofit.getMessage(filter, new Callback<List<Message>>() {
+        Retrofit.getMessage(filter, new Callback<LinkedList<Message>>() {
             @Override
-            public void success(List<Message> messages, Response response) {
+            public void success(LinkedList<Message> messages, Response response) {
                 // Broadcast the list of detected activities.
                 if (messages == null) {
                     Log.d(TAG, "success() called with: "
                             + "messages = [" + null + "], response = [" + response + "]");
                     return;
                 }
+                // check for new msg
+                boolean weHaveNewMsg = false;
+                if (messages.size() > 0 && messageList.size() > 0) {
+                    if (!messages.getFirst().equals(messageList.getFirst())) {
+                        weHaveNewMsg = true;
+                    }
+                }
                 messageList.clear();
                 messageList.addAll(messages);
                 Intent localIntent = new Intent(BROADCAST_ACTION);
                 localIntent.putExtra(ACTIVITY_EXTRA, "getList");
                 LocalBroadcastManager.getInstance(App.getAppContext()).sendBroadcast(localIntent);
+                if (weHaveNewMsg) {
+                    if (messageList.size() > 0) {
+                        showNotification(messageList.getFirst());
+                    }
+                }
             }
 
             @Override

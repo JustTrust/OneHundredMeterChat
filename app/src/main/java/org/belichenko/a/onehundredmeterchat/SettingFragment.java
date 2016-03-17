@@ -121,9 +121,7 @@ public class SettingFragment extends Fragment implements Constant{
                 .edit();
         edit.putString(MSG_LIMIT, mLimit.getText().toString());
         edit.apply();
-
     }
-
 
     @OnTextChanged(value = R.id.setting_radius, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void onRadiusChange(CharSequence text) {

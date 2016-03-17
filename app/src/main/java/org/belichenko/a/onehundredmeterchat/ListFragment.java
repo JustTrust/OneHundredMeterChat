@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * A fragment representing a list of Items.
@@ -25,7 +25,7 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
     private static final String TAG = "List fragment";
     protected static String name = "Chat";
     private static ListFragment ourInstance = new ListFragment();
-    protected ArrayList<Message> messagesList;
+    protected LinkedList<Message> messagesList;
     private OnListFragmentInteractionListener mListener;
     private RecyclerViewAdapter mAdapter;
     private ImageView imageList;
@@ -55,9 +55,10 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         imageList = (ImageView) view.findViewById(R.id.list_send_btn);
         textList = (EditText) view.findViewById(R.id.list_msg_text);
+        textList.setBackground(null);
 
         imageList.setOnClickListener(this);
-        messagesList = new ArrayList<>();
+        messagesList = new LinkedList<>();
         mAdapter = new RecyclerViewAdapter(messagesList, mListener);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(App.getAppContext()));
@@ -88,9 +89,9 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
         mListener = null;
     }
 
-    public void updateMessage(ArrayList<Message> msgList) {
+    public void updateMessages(LinkedList<Message> msgList) {
         if (msgList == null) {
-            Log.d(TAG, "updateMessage() called with: " + "msgList = [" + msgList + "]");
+            Log.d(TAG, "updateMessages() called with: " + "msgList = [" + null + "]");
             return;
         }
         messagesList.clear();
@@ -101,7 +102,7 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
-        updateMessage(((MainActivity) getActivity()).getMsgList());
+        updateMessages(((MainActivity) getActivity()).getMsgList());
     }
 
     @Override

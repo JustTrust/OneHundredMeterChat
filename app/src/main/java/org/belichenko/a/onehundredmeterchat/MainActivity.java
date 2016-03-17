@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.LinkedHashMap;
 
 import retrofit.Callback;
@@ -36,15 +36,6 @@ public class MainActivity extends AppCompatActivity implements
         , Constant {
 
     private static final String TAG = "Main activity";
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -53,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements
     private ViewPager mViewPager;
     private boolean isServiceRunning = false;
     private ServiceConnection serviceConnection;
-    protected ActivityDetectionBroadcastReceiver mBroadcastReceiver;
+    protected UpdateMsgBroadcastReceiver mBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +55,15 @@ public class MainActivity extends AppCompatActivity implements
         startService(serviceIntent);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        /*
+      The {@link android.support.v4.view.PagerAdapter} that will provide
+      fragments for each of the sections. We use a
+      {@link FragmentPagerAdapter} derivative, which will keep every
+      loaded fragment in memory. If this becomes too memory intensive, it
+      may be best to switch to a
+      {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     */
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -76,11 +75,9 @@ public class MainActivity extends AppCompatActivity implements
             public void onServiceConnected(ComponentName name, IBinder service) {
                 isServiceRunning = true;
                 msgService = ((MsgService.MyBinder) service).getService();
-                if (isServiceRunning) {
-                    ArrayList<Message> messageList = (ArrayList<Message>) msgService.messageList;
-                    MapFragment.getInstance().updateMessage(messageList);
-                    ListFragment.getInstance().updateMessage(messageList);
-                }
+                LinkedList<Message> messageList = msgService.messageList;
+                MapFragment.getInstance().updateMessages(messageList);
+                ListFragment.getInstance().updateMessages(messageList);
             }
 
             @Override
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
         };
 
         // Get a receiver for broadcasts from ActivityDetectionIntentService.
-        mBroadcastReceiver = new ActivityDetectionBroadcastReceiver();
+        mBroadcastReceiver = new UpdateMsgBroadcastReceiver();
     }
 
     @Override
@@ -118,14 +115,18 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onListFragmentInteraction(Message message) {
-        Toast.makeText(this, "Item selected", Toast.LENGTH_SHORT).show();
+        if (message == null) {
+            return;
+        }
+        mViewPager.setCurrentItem(1);
+        MapFragment.getInstance().showMsgOnMap(message);
     }
 
-    public ArrayList<Message> getMsgList() {
+    public LinkedList<Message> getMsgList() {
         if (msgService != null && isServiceRunning) {
-            ArrayList<Message> messageList = (ArrayList<Message>) msgService.messageList;
-            MapFragment.getInstance().updateMessage(messageList);
-            ListFragment.getInstance().updateMessage(messageList);
+            LinkedList<Message> messageList = msgService.messageList;
+            MapFragment.getInstance().updateMessages(messageList);
+            ListFragment.getInstance().updateMessages(messageList);
             return messageList;
         }
         return null;
@@ -158,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(MainActivity.this, "Message don't sent", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Message don't sent. Check internet connection", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -253,8 +254,7 @@ public class MainActivity extends AppCompatActivity implements
      * Receives a list of one or more DetectedActivity objects associated with the current state of
      * the device.
      */
-    public class ActivityDetectionBroadcastReceiver extends BroadcastReceiver {
-        protected static final String TAG = "activity-detection-response-receiver";
+    public class UpdateMsgBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -265,9 +265,9 @@ public class MainActivity extends AppCompatActivity implements
             String updateType = bundle.getString(ACTIVITY_EXTRA);
             if (updateType != null && updateType.equals("getList")) {
                 if (isServiceRunning) {
-                    ArrayList<Message> messageList = (ArrayList<Message>) msgService.messageList;
-                    MapFragment.getInstance().updateMessage(messageList);
-                    ListFragment.getInstance().updateMessage(messageList);
+                    LinkedList<Message> messageList = msgService.messageList;
+                    MapFragment.getInstance().updateMessages(messageList);
+                    ListFragment.getInstance().updateMessages(messageList);
                 }
             }
         }

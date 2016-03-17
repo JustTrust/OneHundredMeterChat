@@ -1,20 +1,28 @@
 package org.belichenko.a.onehundredmeterchat;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class Message {
 
     public int id;
     public String user_id;
     public String text;
-    public LatLng latLng;
     public double lng;
     public double lat;
     public String time;
     public double distance;
 
-
-    public String getLatLng() {
-        return String.format("%.4f, %.4f",lat, lng);
+    @Override
+    public boolean equals(Object other) {
+        if (other == this){
+            return true;
+        }
+        if (!(other instanceof Message)) {
+            return false;
+        }
+        Message otherMessage = (Message)other;
+        return this.user_id.equals(otherMessage.user_id)
+                && this.text.equals(otherMessage.text)
+                && this.time.equals(otherMessage.time)
+                && this.lat == otherMessage.lat
+                && this.lng == otherMessage.lng;
     }
 }

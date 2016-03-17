@@ -43,19 +43,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         SharedPreferences sharedPref = App.getAppContext()
                 .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         String storedName = sharedPref.getString(STORED_NAME, "");
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                , ViewGroup.LayoutParams.WRAP_CONTENT);
 
         if (mValues.get(position).user_id.equals(storedName)) {
-            params.gravity = Gravity.RIGHT;
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                    , ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.RIGHT);
             holder.mView.setLayoutParams(params);
             holder.mViewContainer.setBackgroundColor(App.getAppContext().getResources()
-                    .getColor(R.color.colorPrimaryLight));
+                    .getColor(R.color.green_msg));
         }else{
-            params.gravity = Gravity.LEFT;
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                    , ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.LEFT);
             holder.mView.setLayoutParams(params);
             holder.mViewContainer.setBackgroundColor(App.getAppContext().getResources()
-                    .getColor(R.color.white_overlay));
+                    .getColor(R.color.blue_msg));
         }
         holder.mItem = mValues.get(position);
         holder.mUser.setText(mValues.get(position).user_id);
@@ -80,7 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
+        public final FrameLayout mView;
         public final RelativeLayout mViewContainer;
         public final TextView mUser;
         public final TextView mMessage;
@@ -89,7 +89,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
+            mView = (FrameLayout) view;
             mViewContainer = (RelativeLayout) view.findViewById(R.id.list_item_container);
             mUser = (TextView) view.findViewById(R.id.user_list);
             mMessage = (TextView) view.findViewById(R.id.message_list);
