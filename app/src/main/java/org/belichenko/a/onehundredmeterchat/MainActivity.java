@@ -1,5 +1,6 @@
 package org.belichenko.a.onehundredmeterchat;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,6 +12,8 @@ import android.content.SharedPreferences;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements
         mBroadcastReceiver = new UpdateMsgBroadcastReceiver();
 
         checkLocationServiceEnabled();
+        isNetWorkConnected();
 
     }
 
@@ -181,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements
         } catch (Exception ex) {
         }
         if (netWork == false) {
-            Toast.makeText(getApplicationContext(), "Интернет не доступен, проверьте соединение, или состояние", Toast.LENGTH_LONG).show();
+
         }
         return buildAlertMessageNoLocationService(geolocationEnabled);
     }
@@ -203,6 +207,15 @@ public class MainActivity extends AppCompatActivity implements
             return true;
         }
         return false;
+    }
+
+
+    private void isNetWorkConnected() {
+        String network = Context.CONNECTIVITY_SERVICE;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(network);
+        if (cm.getActiveNetworkInfo() == null) {
+            Toast.makeText(getApplicationContext(), "Интернет не доступен, проверьте соединение, или состояние", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
