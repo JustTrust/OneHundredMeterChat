@@ -45,7 +45,7 @@ public class MsgService extends Service implements Constant
     private static final String TAG = "Service";
     public MyBinder binder = new MyBinder();
     public Location currentLocation;
-    public List<Message> messageList = new ArrayList<>();
+    public ArrayList<Message> messageList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     Handler handler;
@@ -102,7 +102,8 @@ public class MsgService extends Service implements Constant
         if (sharedPref.contains(MESSAGE_LIST)) {
             String jsonMsg = sharedPref.getString(MESSAGE_LIST, null);
             Message[] tempList = gson.fromJson(jsonMsg, Message[].class);
-            messageList = Arrays.asList(tempList);
+            messageList.clear();
+            messageList.addAll(Arrays.asList(tempList));
         }
     }
 

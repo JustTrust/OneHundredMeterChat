@@ -99,6 +99,12 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        updateMessage(((MainActivity) getActivity()).getMsgList());
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.list_send_btn:

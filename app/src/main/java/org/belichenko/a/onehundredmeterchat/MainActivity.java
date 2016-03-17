@@ -76,6 +76,11 @@ public class MainActivity extends AppCompatActivity implements
             public void onServiceConnected(ComponentName name, IBinder service) {
                 isServiceRunning = true;
                 msgService = ((MsgService.MyBinder) service).getService();
+                if (isServiceRunning) {
+                    ArrayList<Message> messageList = (ArrayList<Message>) msgService.messageList;
+                    MapFragment.getInstance().updateMessage(messageList);
+                    ListFragment.getInstance().updateMessage(messageList);
+                }
             }
 
             @Override
@@ -91,9 +96,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-
-        bindService(new Intent(this, MsgService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-
+        if (!isServiceRunning) {
+            bindService(new Intent(this, MsgService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        }
         // Register the broadcast receiver that informs this activity of the DetectedActivity
         // object broadcast sent by the intent service.
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver,
@@ -114,6 +119,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onListFragmentInteraction(Message message) {
         Toast.makeText(this, "Item selected", Toast.LENGTH_SHORT).show();
+    }
+
+    public ArrayList<Message> getMsgList() {
+        if (msgService != null && isServiceRunning) {
+            ArrayList<Message> messageList = (ArrayList<Message>) msgService.messageList;
+            MapFragment.getInstance().updateMessage(messageList);
+            ListFragment.getInstance().updateMessage(messageList);
+            return messageList;
+        }
+        return null;
     }
 
     public void sendNewMessage(String msgText) {

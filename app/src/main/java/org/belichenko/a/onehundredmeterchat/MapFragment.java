@@ -95,6 +95,12 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateMessage(((MainActivity) getActivity()).getMsgList());
+    }
+
     //Обработчик нажатия на картинку
     @Override
     public void onClick(View view) {
