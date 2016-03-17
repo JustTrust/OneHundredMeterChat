@@ -107,9 +107,11 @@ public class MsgService extends Service implements Constant
     }
 
     protected void stopLocationUpdates() {
+
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mGoogleApiClient, this);
+            Log.d(TAG, "stopLocationUpdates()");
         } else {
             Log.d(TAG, "stopLocationUpdates() mGoogleApiClient not connected");
         }
@@ -133,8 +135,8 @@ public class MsgService extends Service implements Constant
     protected void createLocationRequest() {
         SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(TEN_SECONDS);
-        mLocationRequest.setFastestInterval(FIVE_SECONDS);
+        mLocationRequest.setInterval(TWENTY_SECONDS);
+        mLocationRequest.setFastestInterval(TEN_SECONDS);
         mLocationRequest.setPriority(sharedPref.getInt(ACCURACY, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY));
     }
 
@@ -156,10 +158,10 @@ public class MsgService extends Service implements Constant
         }
         Location mLastLocation = LocationServices.FusedLocationApi
                 .getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            currentLocation = mLastLocation;
-            showNotification();
-        }
+
+        currentLocation = mLastLocation;
+        showNotification();
+
         startLocationUpdates();
     }
 
@@ -175,10 +177,8 @@ public class MsgService extends Service implements Constant
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location != null) {
-            currentLocation = location;
-            showNotification();
-        }
+        currentLocation = location;
+        showNotification();
     }
 
     /**
@@ -226,7 +226,9 @@ public class MsgService extends Service implements Constant
     }
 
     private void showNotification() {
-
+        if (currentLocation == null) {
+            return;
+        }
         Intent notificationIntent = new Intent(App.getAppContext(), MainActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(App.getAppContext(),
@@ -251,7 +253,6 @@ public class MsgService extends Service implements Constant
         if (currentLocation == null) {
             return;
         }
-        showNotification();
         SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         String radius = sharedPref.getString(RADIUS, "100");
         String limit = sharedPref.getString(MSG_LIMIT, "20");

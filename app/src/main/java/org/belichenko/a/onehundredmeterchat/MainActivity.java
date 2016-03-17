@@ -59,7 +59,9 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // start service
+        Intent serviceIntent = new Intent(this, MsgService.class);
+        startService(serviceIntent);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -89,9 +91,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isServiceRunning) {
-            bindService(new Intent(this, MsgService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-        }
+
+        bindService(new Intent(this, MsgService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+
         // Register the broadcast receiver that informs this activity of the DetectedActivity
         // object broadcast sent by the intent service.
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver,
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements
 
         SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         String storedName = sharedPref.getString(STORED_NAME, "");
-        if (msgText.isEmpty() || storedName.isEmpty() || msgService == null){
+        if (msgText.isEmpty() || storedName.isEmpty() || msgService == null) {
             Log.d(TAG, "sendMessage() called with: empty parameters ");
             return;
         }

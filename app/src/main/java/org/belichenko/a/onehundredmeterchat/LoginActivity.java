@@ -107,10 +107,6 @@ public class LoginActivity extends AppCompatActivity implements Constant {
         mStartBt = (EditText) findViewById(R.id.start_bt);
         mName = (EditText) findViewById(R.id.editName);
 
-        // start service
-        Intent serviceIntent = new Intent(this, MsgService.class);
-        startService(serviceIntent);
-
         SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         String storedName = sharedPref.getString(STORED_NAME, "");
 

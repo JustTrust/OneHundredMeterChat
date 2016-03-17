@@ -103,6 +103,7 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
         switch (v.getId()) {
             case R.id.list_send_btn:
                 ((MainActivity) getActivity()).sendNewMessage(textList.getText().toString());
+                textList.setText("");
                 break;
         }
     }

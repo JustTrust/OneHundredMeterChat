@@ -3,9 +3,11 @@ package org.belichenko.a.onehundredmeterchat;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,15 +34,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+
+    @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         SharedPreferences sharedPref = App.getAppContext()
                 .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         String storedName = sharedPref.getString(STORED_NAME, "");
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                , ViewGroup.LayoutParams.WRAP_CONTENT);
 
         if (mValues.get(position).user_id.equals(storedName)) {
+            params.gravity = Gravity.RIGHT;
+            holder.mView.setLayoutParams(params);
             holder.mViewContainer.setBackgroundColor(App.getAppContext().getResources()
                     .getColor(R.color.colorPrimaryLight));
         }else{
+            params.gravity = Gravity.LEFT;
+            holder.mView.setLayoutParams(params);
             holder.mViewContainer.setBackgroundColor(App.getAppContext().getResources()
                     .getColor(R.color.white_overlay));
         }

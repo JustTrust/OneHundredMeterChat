@@ -67,7 +67,6 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
         return view;
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -82,15 +81,18 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
             return;
         }
         map.clear();
-        LatLng coordinate = new LatLng(0,0);
         for (Message message : msgList) {
-            coordinate = new LatLng(message.lat, message.lng);
             Marker marker = map.addMarker(new MarkerOptions()
-                    .position(coordinate)
+                    .position(new LatLng(message.lat, message.lng))
                     .title(message.user_id)
                     .snippet(message.text));
         }
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 18));
+        // show last msg on the map
+        if (msgList.size() > 0){
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(msgList.get(0).lat, msgList.get(0).lng), 16));
+        }
+
     }
 
     //Обработчик нажатия на картинку
@@ -108,6 +110,7 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
                 break;
             case R.id.map_send_btn:
                 ((MainActivity) getActivity()).sendNewMessage(messegeText.getText().toString());
+                messegeText.setText("");
                 break;
         }
     }
