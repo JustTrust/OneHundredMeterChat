@@ -18,5 +18,6 @@
     <string name="text_accuracy1">high</string>
     <string name="text_accuracy2">low</string>
     <string name="new_msg">New msg: </string>
+    <string name="msg_switch_network">Включите GPS</string>
 
 </resources>
