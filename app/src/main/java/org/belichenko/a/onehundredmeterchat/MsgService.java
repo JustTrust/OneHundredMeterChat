@@ -173,6 +173,12 @@ public class MsgService extends Service implements Constant
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
+        SharedPreferences mPrefs = App.getAppContext()
+                .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = mPrefs.edit();
+        Gson gson = new Gson();
+        edit.putString(CURRENT_LOCATION, gson.toJson(currentLocation));
+        edit.apply();
     }
 
     /**

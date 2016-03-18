@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/welcome_text"
         android:layout_margin="@dimen/view_marging"
+        android:textColor="@color/colorPrimary"
         android:gravity="top|center"
         android:text="@string/meter_string"
         android:textSize="32sp"
@@ -67,6 +68,15 @@
         android:singleLine="true"
         android:text="@string/start_text"
         android:textSize="22sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/start_bt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:src="@drawable/circle_map"/>
 
     <FrameLayout
         android:id="@+id/full_screen"
