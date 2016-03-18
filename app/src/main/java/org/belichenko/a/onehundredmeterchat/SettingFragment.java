@@ -102,11 +102,16 @@ public class SettingFragment extends Fragment implements Constant{
 
     @OnClick(R.id.logout)
     public void logout(View view) {
-        // clear shared pref
+        // clear shared pref, except list of user
         SharedPreferences.Editor edit = App.getAppContext()
                 .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE)
                         .edit();
-        edit.clear();
+        edit.remove(ACCURACY);
+        edit.remove(STORED_NAME);
+        edit.remove(STORED_ACCURACY);
+        edit.remove(RADIUS);
+        edit.remove(MSG_LIMIT);
+        edit.remove(CURRENT_LOCATION);
         edit.apply();
         // stop service
         Intent serviceIntent = new Intent(App.getAppContext(), MsgService.class);

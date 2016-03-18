@@ -5,7 +5,7 @@
     android:id="@+id/list_item_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="end"
+    android:layout_gravity="end|right"
     android:layout_margin="@dimen/view_padding"
     android:background="@drawable/green_msg"
     android:orientation="vertical"
