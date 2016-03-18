@@ -10,8 +10,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -37,14 +44,21 @@ public class LoginActivity extends AppCompatActivity implements Constant {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    private boolean mVisible;
-
-
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
     View mContentView;
-    View mControlsView;
-    EditText mStartBt;
-    EditText mName;
-
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -62,7 +76,7 @@ public class LoginActivity extends AppCompatActivity implements Constant {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-
+    View mControlsView;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -74,41 +88,46 @@ public class LoginActivity extends AppCompatActivity implements Constant {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
-
+    EditText mStartBt;
+    private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
             hide();
         }
     };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
+    private AutoCompleteTextView usersName;
+    //EditText mName;
+    private ArrayAdapter<String> adapter;
+    private String listUsers;
+    private ArrayList<String> userslist = new ArrayList<>();
+    private String[] tempList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Gson lgson = new Gson();
         setContentView(R.layout.activity_login);
         mVisible = true;
         mContentView = findViewById(R.id.cover_layout);
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mStartBt = (EditText) findViewById(R.id.start_bt);
-        mName = (EditText) findViewById(R.id.editName);
+        // mName = (EditText) findViewById(R.id.editName);
+        usersName = (AutoCompleteTextView) findViewById(R.id.editName);
 
         SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         String storedName = sharedPref.getString(STORED_NAME, "");
+        listUsers = sharedPref.getString(LIST_OF_USERS, "");
+        if (sharedPref.contains(LIST_OF_USERS)) {
+            String jsonMsg = sharedPref.getString(LIST_OF_USERS, "");
+            tempList = lgson.fromJson(jsonMsg, String[].class);
+            userslist.clear();
+            userslist.addAll(Arrays.asList(tempList));
+
+        }
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, userslist);
+        usersName.setAdapter(adapter);
+        usersName.setThreshold(1);
 
         if (!storedName.isEmpty()) {
             // start main activity if we have name
@@ -120,15 +139,15 @@ public class LoginActivity extends AppCompatActivity implements Constant {
         mStartBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mName.getText().toString().length() < 6) {
+                if (usersName.getText().toString().length() < 6) {
                     Toast.makeText(App.getAppContext(),
                             getString(R.string.no_valid_name), Toast.LENGTH_LONG).show();
                     return;
                 }
                 SharedPreferences.Editor edit =
                         getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE)
-                        .edit();
-                edit.putString(STORED_NAME, mName.getText().toString());
+                                .edit();
+                edit.putString(STORED_NAME, usersName.getText().toString());
                 edit.apply();
 
                 Intent activityIntent = new Intent(App.getAppContext(), MainActivity.class);

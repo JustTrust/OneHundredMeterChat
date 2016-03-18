@@ -7,6 +7,7 @@ public interface Constant {
     String PACKAGE_NAME = "org.belichenko.a.onehundredmeterchat";
     String STORAGE_OF_SETTINGS = PACKAGE_NAME + ".storageOfSettings";
     String STORED_NAME = PACKAGE_NAME + ".storedName";
+    String LIST_OF_USERS = PACKAGE_NAME + ".listOfUsers";
     String RADIUS = PACKAGE_NAME + ".radius";
     String MSG_LIMIT = PACKAGE_NAME + ".msgLimit";
     String CURRENT_LOCATION = PACKAGE_NAME + ".currentLocation";
