@@ -1,6 +1,5 @@
 package org.belichenko.a.onehundredmeterchat;
 
-import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,13 +8,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -27,11 +24,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.LinkedList;
+import com.google.android.gms.location.LocationRequest;
+
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -43,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements
         , Constant {
 
     private static final String TAG = "Main activity";
-    public static boolean geolocationEnabled = false;
-    public static boolean netWork;
     protected UpdateMsgBroadcastReceiver mBroadcastReceiver;
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -99,8 +95,6 @@ public class MainActivity extends AppCompatActivity implements
         mBroadcastReceiver = new UpdateMsgBroadcastReceiver();
 
         checkLocationServiceEnabled();
-        isNetWorkConnected();
-
     }
 
     @Override
@@ -178,45 +172,42 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private boolean checkLocationServiceEnabled() {
+    private void checkLocationServiceEnabled() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean netWork = false;
+        boolean geolocationEnabled = false;
         try {
             geolocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             netWork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
+        } catch (IllegalArgumentException ex) {
+            Log.d(TAG, "checkLocationServiceEnabled() called with Exception: " + ex.toString());
         }
-        if (netWork == false) {
-
+        SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+        int requestedAccuracy = sharedPref.getInt(ACCURACY, LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if ((requestedAccuracy == LocationRequest.PRIORITY_HIGH_ACCURACY) & (!geolocationEnabled)) {
+            buildAlertMessageNoLocationService(R.string.msg_switch_gps);
         }
-        return buildAlertMessageNoLocationService(geolocationEnabled);
+        if ((requestedAccuracy == LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY) & (!netWork)) {
+            buildAlertMessageNoLocationService(R.string.msg_switch_network);
+        }
     }
 
-    private boolean buildAlertMessageNoLocationService(boolean network_enabled) {
-        String msg = !network_enabled ? getResources().getString(R.string.msg_switch_network) : null;
-
-        if (msg != null) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setCancelable(false)
-                    .setMessage(msg)
-                    .setPositiveButton("Включить", new DialogInterface.OnClickListener() {
-                        public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+    private void buildAlertMessageNoLocationService(final int provider) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true)
+                .setMessage(getString(provider))
+                .setPositiveButton(getString(R.string.msg_turn_on), new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog
+                            , @SuppressWarnings("unused") final int id) {
+                        if (provider == R.string.msg_switch_gps){
                             startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }else{
+                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                         }
-                    });
-            final AlertDialog alert = builder.create();
-            alert.show();
-            return true;
-        }
-        return false;
-    }
-
-
-    private void isNetWorkConnected() {
-        String network = Context.CONNECTIVITY_SERVICE;
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(network);
-        if (cm.getActiveNetworkInfo() == null) {
-            Toast.makeText(getApplicationContext(), "Интернет не доступен, проверьте соединение, или состояние", Toast.LENGTH_LONG).show();
-        }
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     /**
@@ -248,8 +239,6 @@ public class MainActivity extends AppCompatActivity implements
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_setting, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.text_limit);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
     }

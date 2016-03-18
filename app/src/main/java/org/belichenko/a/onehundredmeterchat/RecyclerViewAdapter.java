@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.belichenko.a.onehundredmeterchat.ListFragment.OnListFragmentInteractionListener;
@@ -65,7 +64,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.mItem = mValues.get(position);
             holder.mUser.setText(mValues.get(position).user_id);
             holder.mMessage.setText(mValues.get(position).text);
-            holder.mCoordinate.setText(mValues.get(position).time);
+            holder.mCoordinate.setText(mValues.get(position).getFormattedTime());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,7 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.mItem = mValues.get(position);
             holder.mUser.setText(mValues.get(position).user_id);
             holder.mMessage.setText(mValues.get(position).text);
-            holder.mCoordinate.setText(mValues.get(position).time);
+            holder.mCoordinate.setText(mValues.get(position).getFormattedTime());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,7 +99,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class ViewHolderLeft extends RecyclerView.ViewHolder {
-        public final FrameLayout mView;
+        public final View mView;
         public final TextView mUser;
         public final TextView mMessage;
         public final TextView mCoordinate;
@@ -108,7 +107,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public ViewHolderLeft(View view) {
             super(view);
-            mView = (FrameLayout) view;
+            mView = view;
             mUser = (TextView) view.findViewById(R.id.user_list);
             mMessage = (TextView) view.findViewById(R.id.message_list);
             mCoordinate = (TextView) view.findViewById(R.id.time_list);
@@ -116,7 +115,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class ViewHolderRight extends RecyclerView.ViewHolder {
-        public final FrameLayout mView;
+        public final View mView;
         public final TextView mUser;
         public final TextView mMessage;
         public final TextView mCoordinate;
@@ -124,7 +123,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public ViewHolderRight(View view) {
             super(view);
-            mView = (FrameLayout) view;
+            mView = view;
             mUser = (TextView) view.findViewById(R.id.user_list);
             mMessage = (TextView) view.findViewById(R.id.message_list);
             mCoordinate = (TextView) view.findViewById(R.id.time_list);
