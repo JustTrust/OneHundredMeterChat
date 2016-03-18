@@ -88,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements Constant {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
+
     EditText mStartBt;
     private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
@@ -97,38 +98,26 @@ public class LoginActivity extends AppCompatActivity implements Constant {
         }
     };
     private AutoCompleteTextView usersName;
-    //EditText mName;
     private ArrayAdapter<String> adapter;
-    private String listUsers;
-    private ArrayList<String> userslist = new ArrayList<>();
-    private String[] tempList;
+    private ArrayList<String> usersList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Gson lgson = new Gson();
         setContentView(R.layout.activity_login);
         mVisible = true;
         mContentView = findViewById(R.id.cover_layout);
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mStartBt = (EditText) findViewById(R.id.start_bt);
-        // mName = (EditText) findViewById(R.id.editName);
         usersName = (AutoCompleteTextView) findViewById(R.id.editName);
+
+        getListOfUsers();
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, usersList);
+        usersName.setAdapter(adapter);
+        usersName.setThreshold(2);
 
         SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
         String storedName = sharedPref.getString(STORED_NAME, "");
-        listUsers = sharedPref.getString(LIST_OF_USERS, "");
-        if (sharedPref.contains(LIST_OF_USERS)) {
-            String jsonMsg = sharedPref.getString(LIST_OF_USERS, "");
-            tempList = lgson.fromJson(jsonMsg, String[].class);
-            userslist.clear();
-            userslist.addAll(Arrays.asList(tempList));
-
-        }
-        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, userslist);
-        usersName.setAdapter(adapter);
-        usersName.setThreshold(1);
-
         if (!storedName.isEmpty()) {
             // start main activity if we have name
             Intent activityIntent = new Intent(this, MainActivity.class);
@@ -144,12 +133,7 @@ public class LoginActivity extends AppCompatActivity implements Constant {
                             getString(R.string.no_valid_name), Toast.LENGTH_LONG).show();
                     return;
                 }
-                SharedPreferences.Editor edit =
-                        getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE)
-                                .edit();
-                edit.putString(STORED_NAME, usersName.getText().toString());
-                edit.apply();
-
+                storeNewName(usersName.getText().toString());
                 Intent activityIntent = new Intent(App.getAppContext(), MainActivity.class);
                 startActivity(activityIntent);
             }
@@ -162,6 +146,25 @@ public class LoginActivity extends AppCompatActivity implements Constant {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getListOfUsers();
+        adapter.notifyDataSetChanged();
+    }
+
+    private void storeNewName(String name) {
+        SharedPreferences.Editor edit =
+                getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE)
+                        .edit();
+        if (!usersList.contains(name)){
+            usersList.add(name);
+            Gson gson = new Gson();
+            edit.putString(LIST_OF_USERS, gson.toJson(usersList));
+        }
+        edit.putString(STORED_NAME, usersName.getText().toString());
+        edit.apply();
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -170,6 +173,17 @@ public class LoginActivity extends AppCompatActivity implements Constant {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
+    }
+
+    private void getListOfUsers() {
+        SharedPreferences sharedPref = getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE);
+        Gson lgson = new Gson();
+        if (sharedPref.contains(LIST_OF_USERS)) {
+            String jsonMsg = sharedPref.getString(LIST_OF_USERS, "");
+            String[] tempList = lgson.fromJson(jsonMsg, String[].class);
+            usersList.clear();
+            usersList.addAll(Arrays.asList(tempList));
+        }
     }
 
     private void toggle() {
