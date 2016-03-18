@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements
         Location currentLocation = msgService.currentLocation;
         if (currentLocation == null) {
             Log.d(TAG, "sendMessage() called with: currentLocation == null ");
+            Toast.makeText(MainActivity.this, "Message don't sent. Check GPS connection", Toast.LENGTH_LONG).show();
             return;
         }
 

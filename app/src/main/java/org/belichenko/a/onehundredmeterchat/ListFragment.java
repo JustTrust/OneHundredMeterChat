@@ -3,7 +3,6 @@ package org.belichenko.a.onehundredmeterchat;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,12 +60,7 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
         messagesList = new LinkedList<>();
         mAdapter = new RecyclerViewAdapter(messagesList, mListener);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(App.getAppContext()));
         recyclerView.setAdapter(mAdapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
-        LinearLayoutManager layoutManager = new LinearLayoutManager(App.getAppContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
 
         return view;
     }

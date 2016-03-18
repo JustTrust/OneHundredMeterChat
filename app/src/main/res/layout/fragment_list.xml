@@ -6,17 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    android:orientation="horizontal"
     tools:context=".ListFragment"
-    tools:showIn="@layout/list_item">
+    tools:showIn="@layout/list_item_left">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bar"
-        app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/list_item" />
+        app:layoutManager="LinearLayoutManager"/>
 
     <LinearLayout
         android:id="@+id/bar"

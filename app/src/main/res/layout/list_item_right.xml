@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="end"
+    android:padding="@dimen/view_padding">
+
+    <RelativeLayout
+        android:id="@+id/list_item_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/green_msg"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/text_margin"
+        android:paddingLeft="@dimen/view_padding"
+        android:paddingTop="@dimen/view_padding">
+
+            <TextView
+                android:id="@+id/user_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/view_padding"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textStyle="bold"
+                tools:text="Vasiliy" />
+
+            <TextView
+                android:id="@+id/time_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/view_padding"
+                android:layout_toRightOf="@+id/user_list"
+                android:textAppearance="?attr/textAppearanceListItem"
+                tools:text="15:30 26-08-2106" />
+
+            <TextView
+                android:id="@+id/message_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/user_list"
+                android:layout_margin="@dimen/view_padding"
+                android:textAppearance="?attr/textAppearanceListItem"
+                tools:text="One more stupid message" />
+        </RelativeLayout>
+</FrameLayout>
