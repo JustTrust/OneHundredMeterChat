@@ -1,13 +1,19 @@
 package org.belichenko.a.onehundredmeterchat;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -15,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,7 +43,9 @@ public class MainActivity extends AppCompatActivity implements
         , Constant {
 
     private static final String TAG = "Main activity";
-
+    public static boolean geolocationEnabled = false;
+    public static boolean netWork;
+    protected UpdateMsgBroadcastReceiver mBroadcastReceiver;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -44,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements
     private ViewPager mViewPager;
     private boolean isServiceRunning = false;
     private ServiceConnection serviceConnection;
-    protected UpdateMsgBroadcastReceiver mBroadcastReceiver;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +97,10 @@ public class MainActivity extends AppCompatActivity implements
 
         // Get a receiver for broadcasts from ActivityDetectionIntentService.
         mBroadcastReceiver = new UpdateMsgBroadcastReceiver();
+
+        checkLocationServiceEnabled();
+        isNetWorkConnected();
+
     }
 
     @Override
@@ -163,6 +176,47 @@ public class MainActivity extends AppCompatActivity implements
                 Toast.makeText(MainActivity.this, "Message don't sent. Check internet connection", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private boolean checkLocationServiceEnabled() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        try {
+            geolocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            netWork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+        if (netWork == false) {
+
+        }
+        return buildAlertMessageNoLocationService(geolocationEnabled);
+    }
+
+    private boolean buildAlertMessageNoLocationService(boolean network_enabled) {
+        String msg = !network_enabled ? getResources().getString(R.string.msg_switch_network) : null;
+
+        if (msg != null) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false)
+                    .setMessage(msg)
+                    .setPositiveButton("Включить", new DialogInterface.OnClickListener() {
+                        public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+            return true;
+        }
+        return false;
+    }
+
+
+    private void isNetWorkConnected() {
+        String network = Context.CONNECTIVITY_SERVICE;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(network);
+        if (cm.getActiveNetworkInfo() == null) {
+            Toast.makeText(getApplicationContext(), "Интернет не доступен, проверьте соединение, или состояние", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
