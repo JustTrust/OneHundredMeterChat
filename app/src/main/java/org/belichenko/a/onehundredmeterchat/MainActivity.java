@@ -121,6 +121,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+        this.finish();
+    }
+
+    @Override
     public void onListFragmentInteraction(Message message) {
         if (message == null) {
             return;

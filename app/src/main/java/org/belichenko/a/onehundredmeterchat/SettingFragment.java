@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.location.LocationRequest;
 
@@ -26,7 +27,7 @@ import butterknife.OnTextChanged;
 public class SettingFragment extends Fragment implements Constant{
 
     @Bind(R.id.logout)
-    EditText mLogout;
+    TextView mLogout;
     @Bind(R.id.setting_radius)
     EditText mRadius;
     @Bind(R.id.setting_limit)
@@ -102,7 +103,7 @@ public class SettingFragment extends Fragment implements Constant{
 
     @OnClick(R.id.logout)
     public void logout(View view) {
-        // clear shared pref, except list of user
+        // clear shared pref
         SharedPreferences.Editor edit = App.getAppContext()
                 .getSharedPreferences(STORAGE_OF_SETTINGS, Context.MODE_PRIVATE)
                         .edit();
@@ -111,7 +112,6 @@ public class SettingFragment extends Fragment implements Constant{
         edit.remove(STORED_ACCURACY);
         edit.remove(RADIUS);
         edit.remove(MSG_LIMIT);
-        edit.remove(CURRENT_LOCATION);
         edit.apply();
         // stop service
         Intent serviceIntent = new Intent(App.getAppContext(), MsgService.class);

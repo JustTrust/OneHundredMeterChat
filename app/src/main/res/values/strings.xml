@@ -4,14 +4,14 @@
     <string name="welcome_string">Welcome to the</string>
     <string name="meter_string">100 meter chat</string>
     <string name="get_ready_string">Please, enter your name\n and get ready</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">100 Meter Chat</string>
     <string name="action_settings">Settings</string>
     <string name="name_string">Name</string>
-    <string name="start_text">Start</string>
+    <string name="start_text"><u>Start</u></string>
     <string name="no_valid_name">Enter name with 6 char minimum</string>
     <string name="limit_string">Message limit</string>
     <string name="radius_string">Message radius</string>
-    <string name="logut_text">Logout</string>
+    <string name="logout_text"><u>Logout</u></string>
     <string name="accuracy_text">Accuracy</string>
     <string name="text_accuracy1">high</string>
     <string name="text_accuracy2">low</string>

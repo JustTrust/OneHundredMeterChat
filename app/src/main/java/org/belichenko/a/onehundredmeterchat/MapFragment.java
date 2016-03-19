@@ -47,12 +47,9 @@ public class MapFragment extends Fragment implements Constant, OnMapReadyCallbac
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        if (supportMapFragment == null) {
-            supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
-        }
-        if (map == null) {
-            supportMapFragment.getMapAsync(this);
-        }
+        supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
+        supportMapFragment.getMapAsync(this);
+
         imageMap = (ImageView) view.findViewById(R.id.map_map);
         imageSputnik = (ImageView) view.findViewById(R.id.map_sputnic);
         imageEarth = (ImageView) view.findViewById(R.id.map_earth);

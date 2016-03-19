@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements Constant {
         }
     };
 
-    EditText mStartBt;
+    TextView mStartBt;
     private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements Constant {
         mVisible = true;
         mContentView = findViewById(R.id.cover_layout);
         mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mStartBt = (EditText) findViewById(R.id.start_bt);
+        mStartBt = (TextView) findViewById(R.id.start_bt);
         usersName = (AutoCompleteTextView) findViewById(R.id.editName);
 
         getListOfUsers();
