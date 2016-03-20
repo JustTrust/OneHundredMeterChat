@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity implements Constant {
                     return;
                 }
                 storeNewName(usersName.getText().toString());
+                usersName.setText("");
                 Intent activityIntent = new Intent(App.getAppContext(), MainActivity.class);
                 startActivity(activityIntent);
             }
