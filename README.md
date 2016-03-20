@@ -8,14 +8,14 @@ It will be very helpful in a big office, on a storehouse and factory.
 Note. You need have back-end server.
 
 ###### Login screen
-![Login screen](/Screenshot1.png?raw=true "Login screen")
+![Login screen](/screenshots/Screenshot1.png?raw=true "Login screen")
 
 ###### Map screen
-![Map screen](/Screenshot2.png?raw=true "Map screen")
+![Map screen](/screenshots/Screenshot2.png?raw=true "Map screen")
 
 ###### Msg screen
-![Msg screen](/Screenshot3.png?raw=true "Msg screen")
+![Msg screen](/screenshots/Screenshot3.png?raw=true "Msg screen")
 
 ###### Setting
-![Setting](/Screenshot4.png?raw=true "Settings")
+![Setting](/screenshots/Screenshot4.png?raw=true "Settings")
 
