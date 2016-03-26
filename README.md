@@ -11,10 +11,10 @@ Note. You need have back-end server.
 ![Login screen](/screenshots/Screenshot1.png?raw=true "Login screen")
 
 ###### Map screen
-![Map screen](/screenshots/Screenshot2.png?raw=true "Map screen")
+![Map screen](/screenshots/Screenshot3.png?raw=true "Map screen")
 
 ###### Msg screen
-![Msg screen](/screenshots/Screenshot3.png?raw=true "Msg screen")
+![Msg screen](/screenshots/Screenshot2.png?raw=true "Msg screen")
 
 ###### Setting
 ![Setting](/screenshots/Screenshot4.png?raw=true "Settings")
