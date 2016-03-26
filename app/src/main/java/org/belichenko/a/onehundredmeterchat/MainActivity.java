@@ -243,8 +243,7 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_setting, container, false);
-            return rootView;
+            return inflater.inflate(R.layout.fragment_setting, container, false);
         }
     }
 

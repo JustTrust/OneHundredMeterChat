@@ -11,6 +11,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.amazon.device.ads.Ad;
+import com.amazon.device.ads.AdError;
+import com.amazon.device.ads.AdLayout;
+import com.amazon.device.ads.AdListener;
+import com.amazon.device.ads.AdProperties;
+import com.amazon.device.ads.AdRegistration;
+import com.amazon.device.ads.AdTargetingOptions;
+
 import java.util.LinkedList;
 
 /**
@@ -22,13 +30,14 @@ import java.util.LinkedList;
 public class ListFragment extends Fragment implements Constant, View.OnClickListener {
 
     private static final String TAG = "List fragment";
-    protected static String name = "Chat";
-    private static ListFragment ourInstance = new ListFragment();
+    protected static final String name = "Chat";
+    private static final ListFragment ourInstance = new ListFragment();
     protected LinkedList<Message> messagesList;
     private OnListFragmentInteractionListener mListener;
     private RecyclerViewAdapter mAdapter;
     private ImageView imageList;
     private EditText textList;
+    private AdLayout mAdView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -62,6 +71,38 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setAdapter(mAdapter);
 
+        AdRegistration.enableLogging(false);
+        AdRegistration.enableTesting(true);
+        AdRegistration.setAppKey("ba43cb42ea6c4650a5be17803d99d5ce");
+        mAdView = (AdLayout) view.findViewById(R.id.adListView);
+        AdTargetingOptions adOptions = new AdTargetingOptions();
+        mAdView.loadAd();
+        mAdView.setListener(new AdListener() {
+            @Override
+            public void onAdLoaded(Ad ad, AdProperties adProperties) {
+                Log.d(TAG, "onAdLoaded() called with: " + "ad = [" + ad + "], adProperties = [" + adProperties + "]");
+            }
+
+            @Override
+            public void onAdFailedToLoad(Ad ad, AdError adError) {
+                Log.d(TAG, "onAdFailedToLoad() called with: " + "ad = [" + ad + "], adError = [" + adError + "]");
+            }
+
+            @Override
+            public void onAdExpanded(Ad ad) {
+                Log.d(TAG, "onAdExpanded() called with: " + "ad = [" + ad + "]");
+            }
+
+            @Override
+            public void onAdCollapsed(Ad ad) {
+                Log.d(TAG, "onAdCollapsed() called with: " + "ad = [" + ad + "]");
+            }
+
+            @Override
+            public void onAdDismissed(Ad ad) {
+                Log.d(TAG, "onAdDismissed() called with: " + "ad = [" + ad + "]");
+            }
+        });
         return view;
     }
 
@@ -97,6 +138,12 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
     public void onResume() {
         super.onResume();
         updateMessages(((MainActivity) getActivity()).getMsgList());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mAdView.destroy();
     }
 
     @Override

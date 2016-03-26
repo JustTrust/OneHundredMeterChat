@@ -75,7 +75,15 @@
         android:layout_below="@+id/start_bt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:src="@drawable/circle_map"/>
+        android:src="@drawable/circle_map"
+        android:contentDescription="@string/login_image" />
+
+    <com.amazon.device.ads.AdLayout
+        android:id="@+id/adview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/imageView"/>
 
     <FrameLayout
         android:id="@+id/full_screen"

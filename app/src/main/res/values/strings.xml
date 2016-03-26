@@ -19,5 +19,6 @@
     <string name="msg_switch_network">Turn on WiFi</string>
     <string name="msg_turn_on">On</string>
     <string name="msg_switch_gps">Turn on GPS</string>
+    <string name="login_image">Login image</string>
 
 </resources>

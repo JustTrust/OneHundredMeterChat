@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,6 +16,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazon.device.ads.Ad;
+import com.amazon.device.ads.AdError;
+import com.amazon.device.ads.AdLayout;
+import com.amazon.device.ads.AdListener;
+import com.amazon.device.ads.AdProperties;
+import com.amazon.device.ads.AdRegistration;
+import com.amazon.device.ads.AdTargetingOptions;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -43,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements Constant {
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
+    private static final String TAG = "AmazonAd";
     private final Handler mHideHandler = new Handler();
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
@@ -88,8 +97,8 @@ public class LoginActivity extends AppCompatActivity implements Constant {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
-
-    TextView mStartBt;
+    private AdLayout mAdView;
+    private TextView mStartBt;
     private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
@@ -105,11 +114,46 @@ public class LoginActivity extends AppCompatActivity implements Constant {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        AdRegistration.enableLogging(false);
+        AdRegistration.enableTesting(true);
+        AdRegistration.setAppKey("ba43cb42ea6c4650a5be17803d99d5ce");
+
         mVisible = true;
         mContentView = findViewById(R.id.cover_layout);
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mStartBt = (TextView) findViewById(R.id.start_bt);
         usersName = (AutoCompleteTextView) findViewById(R.id.editName);
+
+        mAdView = (AdLayout) findViewById(R.id.adview);
+        AdTargetingOptions adOptions = new AdTargetingOptions();
+        mAdView.loadAd();
+        mAdView.setListener(new AdListener() {
+            @Override
+            public void onAdLoaded(Ad ad, AdProperties adProperties) {
+                Log.d(TAG, "onAdLoaded() called with: " + "ad = [" + ad + "], adProperties = [" + adProperties + "]");
+            }
+
+            @Override
+            public void onAdFailedToLoad(Ad ad, AdError adError) {
+                Log.d(TAG, "onAdFailedToLoad() called with: "
+                        + "code = [" + adError.getCode() + "], msg = [" + adError.getMessage() + "]");
+            }
+
+            @Override
+            public void onAdExpanded(Ad ad) {
+                Log.d(TAG, "onAdExpanded() called with: " + "ad = [" + ad + "]");
+            }
+
+            @Override
+            public void onAdCollapsed(Ad ad) {
+                Log.d(TAG, "onAdCollapsed() called with: " + "ad = [" + ad + "]");
+            }
+
+            @Override
+            public void onAdDismissed(Ad ad) {
+                Log.d(TAG, "onAdDismissed() called with: " + "ad = [" + ad + "]");
+            }
+        });
 
         getListOfUsers();
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, usersList);
@@ -152,6 +196,12 @@ public class LoginActivity extends AppCompatActivity implements Constant {
         super.onResume();
         getListOfUsers();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAdView.destroy();
     }
 
     private void storeNewName(String name) {
