@@ -54,7 +54,6 @@ public class ListFragment extends Fragment implements Constant, View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
